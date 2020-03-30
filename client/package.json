@@ -1,0 +1,51 @@
+{
+  "name": "covid19tracker",
+  "private": true,
+  "description": "A Covid 19 tracker dashboard",
+  "version": "1.0.0",
+  "author": "tusmanakhter",
+  "dependencies": {
+    "@elastic/charts": "^18.1.0",
+    "@elastic/datemath": "^5.0.2",
+    "@elastic/eui": "^21.1.0",
+    "chart.js": "^2.9.3",
+    "gatsby": "^2.19.45",
+    "gatsby-image": "^2.2.44",
+    "gatsby-plugin-manifest": "^2.2.48",
+    "gatsby-plugin-offline": "^3.0.41",
+    "gatsby-plugin-react-helmet": "^3.1.24",
+    "gatsby-plugin-sass": "^2.2.1",
+    "gatsby-plugin-sharp": "^2.4.13",
+    "gatsby-source-filesystem": "^2.1.56",
+    "gatsby-transformer-sharp": "^2.3.19",
+    "ky": "^0.19.0",
+    "leaflet": "^1.6.0",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.28",
+    "node-sass": "^4.13.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-chartjs-2": "^2.9.0",
+    "react-dom": "^16.12.0",
+    "react-helmet": "^5.2.1",
+    "react-leaflet": "^2.6.3"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.2.0",
+    "prettier": "^1.19.1"
+  },
+  "keywords": [
+    "covid"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+    "start": "npm run develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+  }
+}

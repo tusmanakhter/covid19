@@ -1,0 +1,7 @@
+div[class^="Component-horizontalScrollContainer-"] {
+  padding: 0px 8px;
+}
+
+.MuiTableCell-root {
+  padding: 10px 0 !important;
+}

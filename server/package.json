@@ -1,0 +1,23 @@
+{
+  "name": "covid19tracker",
+  "version": "1.0.0",
+  "description": "Covid 19 API",
+  "main": "build/index.js",
+  "scripts": {
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tusmanakhter",
+  "license": "ISC",
+  "dependencies": {
+    "@now/node": "^1.5.0",
+    "csv-parse": "^4.8.8",
+    "got": "^10.6.0",
+    "node-cache": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.3",
+    "tslint": "^6.1.0",
+    "typescript": "^3.8.3"
+  }
+}
