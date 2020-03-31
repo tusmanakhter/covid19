@@ -1,15 +1,15 @@
 import React from "react"
 
-import App from "../components/app"
+import Montreal from "../components/montreal/app"
 import SEO from "../components/seo"
 
-const IndexPage = () => {
+const MontrealPage = () => {
   return (
     <>
-      <SEO title="COVID-19 Tracker" />
-      <App />
+      <SEO title="COVID-19 Montreal Tracker" />
+      <Montreal />
     </>
   )
 }
 
-export default IndexPage
+export default MontrealPage

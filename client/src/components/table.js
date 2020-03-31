@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { EuiInMemoryTable } from '@elastic/eui';
-import './table.css';
 
 const columns = [
   {
@@ -9,18 +8,21 @@ const columns = [
     field: 'latest.confirmed',
     sortable: true,
     dataType: 'number',
+    render: (value) => value.toLocaleString(),
   },
   {
     name: 'Recovered',
     field: 'latest.recovered',
     sortable: true,
     dataType: 'number',
+    render: (value) => value.toLocaleString(),
   },
   {
     name: 'Deaths',
     field: 'latest.deaths',
     sortable: true,
     dataType: 'number',
+    render: (value) => value.toLocaleString(),
   },
 ];
 
@@ -44,7 +46,6 @@ const Table = ({ data, onRowClick, isProvince }) => {
   const getRowProps = useCallback((item) => {
     const { key } = item;
     return {
-      className: 'customRowClass',
       onClick: () => onRowClick(key),
     };
   }, [onRowClick]);

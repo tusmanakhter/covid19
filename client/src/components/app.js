@@ -6,9 +6,7 @@ import Stats from './stats';
 import Leaflet from './leaflet';
 import Chart from './chart';
 import ky from 'ky';
-import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiSpacer, EuiText } from '@elastic/eui';
-import '../themes/theme_light.scss';
-import './app.css';
+import { EuiPanel, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
 
 const App = () => {
   const [data, setData] = useState();
@@ -92,46 +90,34 @@ const App = () => {
   return (
     <Layout>
       <SEO title="Covid-19 Tracker" />
-        <EuiFlexGroup direction="column" gutterSize="none">
-          <EuiFlexItem>
-            <EuiFlexGroup gutterSize="s">
-              <EuiFlexItem grow={1}>
-                <EuiPanel>
-                  <EuiFlexGroup direction="column">
-                    <EuiFlexItem>
-                      <Stats title={selected} data={selectedData} onBack={resetSelected}/>
-                    </EuiFlexItem>
-                    <EuiFlexItem>
-                      <Table data={tableData} onRowClick={selectRow} isProvince={isProvince} />
-                    </EuiFlexItem>
-                  </EuiFlexGroup>
-                </EuiPanel>
+      <EuiFlexGroup gutterSize="s">
+        <EuiFlexItem grow={1}>
+          <EuiPanel>
+            <EuiFlexGroup direction="column">
+              <EuiFlexItem>
+                <Stats title={selected} data={selectedData} onBack={resetSelected}/>
               </EuiFlexItem>
-              <EuiFlexItem grow={2}>
-                <EuiFlexGroup gutterSize="s" direction="column">
-                  <EuiFlexItem>
-                    <EuiPanel paddingSize="none">
-                      <Leaflet data={mapData} selectedData={selectedData} />
-                    </EuiPanel>
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiPanel>
-                      <Chart data={chartData} />
-                    </EuiPanel>
-                  </EuiFlexItem>
-                </EuiFlexGroup>
+              <EuiFlexItem>
+                <Table data={tableData} onRowClick={selectRow} isProvince={isProvince} />
               </EuiFlexItem>
             </EuiFlexGroup>
-          </EuiFlexItem>
-          <EuiSpacer />
-          <EuiFlexItem>
-            <EuiText textAlign="center" className="footer">
-              <p>Data provided by <a target="_blank" rel="noopener noreferrer" href="https://systems.jhu.edu/">JHU CSSE</a> on <a target="_blank" rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19">Github</a></p>
-              <p>Icon provided by <a target="_blank" rel="noopener noreferrer" href="https://www.iconfinder.com/justicon">Just Icon</a> licensed under <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
-              <p>Code available on <a target="_blank" rel="noopener noreferrer" href="https://github.com/tusmanakhter/covid19">Github</a> written by <a target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</a></p>
-            </EuiText>
-          </EuiFlexItem>
-        </EuiFlexGroup>
+          </EuiPanel>
+        </EuiFlexItem>
+        <EuiFlexItem grow={2}>
+          <EuiFlexGroup gutterSize="s" direction="column">
+            <EuiFlexItem>
+              <EuiPanel paddingSize="none">
+                <Leaflet data={mapData} selectedData={selectedData} />
+              </EuiPanel>
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiPanel>
+                <Chart data={chartData} />
+              </EuiPanel>
+            </EuiFlexItem>
+          </EuiFlexGroup>
+        </EuiFlexItem>
+      </EuiFlexGroup>
     </Layout>
   )
 }
