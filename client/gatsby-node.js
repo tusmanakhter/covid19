@@ -19,6 +19,10 @@ exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
             test: /react-leaflet/,
             use: loaders.null(),
           },
+          {
+            test: /@elastic\/eui\/es\/components\/popover/,
+            use: loaders.null(),
+          },
         ],
       },
     })

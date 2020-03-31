@@ -12,3 +12,15 @@
 .header .euiHeaderLink {
   padding: 0 16px;
 }
+
+.header .euiHeaderLinks__list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 767px) {
+  .header .euiHeaderLinks__list {
+    display: none;
+  }
+}
