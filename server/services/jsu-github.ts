@@ -13,6 +13,7 @@ enum Properties {
 
 enum Category {
   Confirmed = "confirmed",
+  Recovered = "recovered",
   Deaths = "deaths"
 }
 
@@ -66,7 +67,7 @@ const getCategory = async (category: Category) => {
   return data;
 }
 
-const mergeCategories = (confirmed: ILocationDict, deaths: ILocationDict) => {
+const mergeCategories = (confirmed: ILocationDict, recovered: ILocationDict, deaths: ILocationDict) => {
   const globalHistory = {};
   const countryHistory = {};
 
@@ -76,8 +77,16 @@ const mergeCategories = (confirmed: ILocationDict, deaths: ILocationDict) => {
   for (const locationKey of locationKeys) {
     const key = locationKey;
     const locationConfirmed = confirmed[key];
+    const locationsRecovered = recovered[key];
     const locationDeaths = deaths[key];
     const { location, history: confirmedHistory } = locationConfirmed;
+
+    let recoveredHistory: IHistoryDict;
+    if (locationsRecovered) {
+      recoveredHistory = locationsRecovered.history;
+    } else {
+      recoveredHistory = {}
+    }
 
     let deathsHistory: IHistoryDict;
     if (locationDeaths) {
@@ -90,6 +99,12 @@ const mergeCategories = (confirmed: ILocationDict, deaths: ILocationDict) => {
     const dateKeys = Object.keys(confirmedHistory);
     for (const dateKey of dateKeys) {
       const dateConfirmed = confirmedHistory[dateKey];
+
+      let dateRecovered = recoveredHistory[dateKey]
+      if (!dateRecovered) {
+        dateRecovered = 0
+      }
+
       let dateDeaths = deathsHistory[dateKey]
       if (!dateDeaths) {
         dateDeaths = 0
@@ -98,11 +113,13 @@ const mergeCategories = (confirmed: ILocationDict, deaths: ILocationDict) => {
       if (!globalHistory[dateKey]) {
         globalHistory[dateKey] = {
           confirmed: 0,
+          recovered: 0,
           deaths: 0,
         }
       };
 
       globalHistory[dateKey].confirmed += dateConfirmed;
+      globalHistory[dateKey].recovered += dateRecovered;
       globalHistory[dateKey].deaths += dateDeaths;
 
       if (location.province !== '') {
@@ -113,17 +130,20 @@ const mergeCategories = (confirmed: ILocationDict, deaths: ILocationDict) => {
         if (!countryHistory[location.country][dateKey]) {
           countryHistory[location.country][dateKey] = {
             confirmed: 0,
+            recovered: 0,
             deaths: 0,
           }
         }
 
         countryHistory[location.country][dateKey].confirmed += dateConfirmed;
+        countryHistory[location.country][dateKey].recovered += dateRecovered;
         countryHistory[location.country][dateKey].deaths += dateDeaths;
       };
 
       const historyDate = {
         date: parseInt(dateKey, 10),
         confirmed: dateConfirmed,
+        recovered: dateRecovered,
         deaths: dateDeaths,
       }
       history.push(historyDate);
@@ -162,12 +182,13 @@ const dictToArray = (dictionary: IStatsDict) => {
 }
 
 const getAllCategories = async () => {
-  const [confirmed, deaths] = await Promise.all([
+  const [confirmed, recovered, deaths] = await Promise.all([
     getCategory(Category.Confirmed),
+    getCategory(Category.Recovered),
     getCategory(Category.Deaths),
   ]);
 
-  const merged = mergeCategories(confirmed, deaths);
+  const merged = mergeCategories(confirmed, recovered, deaths);
   return merged;
 }
 
@@ -195,6 +216,7 @@ interface IStatsDict {
 
 interface IStats {
   confirmed: number,
+  recovered: number,
   deaths: number,
   active: number
 }

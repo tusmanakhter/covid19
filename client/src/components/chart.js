@@ -72,6 +72,22 @@ const Chart = ({ title, data }) => {
                   }}
                 />
                 <LineSeries
+                  id="recovered"
+                  name="Recovered"
+                  xScaleType={ScaleType.Time}
+                  yScaleType={scaleType}
+                  data={data}
+                  xAccessor={"date"}
+                  yAccessors={["recovered"]}
+                  color={"#017D73"}
+                  curve={CurveType.LINEAR}
+                  pointStyleAccessor={() => {
+                    return {
+                      fill: "#017D73",
+                    }
+                  }}
+                />
+                <LineSeries
                   id="deaths"
                   name="Deaths"
                   xScaleType={ScaleType.Time}
