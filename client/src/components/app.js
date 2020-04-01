@@ -112,7 +112,7 @@ const App = () => {
             </EuiFlexItem>
             <EuiFlexItem>
               <EuiPanel>
-                <Chart data={chartData} />
+                <Chart title={selected} data={chartData} />
               </EuiPanel>
             </EuiFlexItem>
           </EuiFlexGroup>
