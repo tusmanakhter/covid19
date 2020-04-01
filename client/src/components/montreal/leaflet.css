@@ -1,5 +1,13 @@
 .montreal.leaflet-container {
   height: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 767px) {
+  .montreal.leaflet-container {
+    height: 650px;
+  }
 }
 
 .legend .euiPanel {
@@ -19,6 +27,13 @@
 
 .info {
   min-width: 300px;
+}
+
+@media only screen and (max-width: 767px) {
+  .info {
+    min-width: 0px;
+    max-width: 250px;
+  }
 }
 
 .info p {

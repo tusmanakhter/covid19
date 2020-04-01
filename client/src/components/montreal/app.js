@@ -58,9 +58,14 @@ const App = () => {
           </EuiPanel>
         </EuiFlexItem>
         <EuiFlexItem grow={2}>
-          <EuiPanel paddingSize="none">
-            <Leaflet data={mapData} mouseEnter={mouseEnter} mouseLeave={mouseLeave} />
-          </EuiPanel>
+          <EuiFlexGroup direction="column" gutterSize="none">
+            <EuiFlexItem>
+              <EuiPanel paddingSize="none">
+                <Leaflet data={mapData} mouseEnter={mouseEnter} mouseLeave={mouseLeave} />
+              </EuiPanel>
+            </EuiFlexItem>
+            <EuiFlexItem />
+          </EuiFlexGroup>
         </EuiFlexItem>
       </EuiFlexGroup>
     </Layout>

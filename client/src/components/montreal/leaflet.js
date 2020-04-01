@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Map, TileLayer, GeoJSON } from 'react-leaflet'
 import Control from 'react-leaflet-control';
 import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel } from '@elastic/eui';
+import { useMediaQuery } from 'react-responsive'
 import ky from 'ky';
 import getKey from '../../helpers/key';
 import '../leaflet.css';
@@ -87,6 +88,9 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
   }
   
   const zoomToFeature = (e) => {
+    if (isSmall) {
+      highlightFeature(e);
+    }
     leafletMap.current.leafletElement.fitBounds(e.target.getBounds());
   }
   
@@ -113,11 +117,20 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
     }
   }, [mouseEnter, mouseLeave]);
 
+  const isSmall = useMediaQuery({ query: '(max-width: 767px)' })
+
+  let zoom;
+  if (isSmall) {
+    zoom = 10
+  } else {
+    zoom = 11
+  }
+
   return (
     <>
       {
         data ? (
-          <Map ref={leafletMap} center={[45.55, -73.72]} zoom={11} className="montreal">
+          <Map ref={leafletMap} center={[45.55, -73.72]} zoom={zoom} className="montreal">
             <TileLayer
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
