@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
                 >
                   Global
                 </Link>
-                <Link to="/montreal"
+                <Link to="/montreal/"
                   className="euiButtonEmpty euiButtonEmpty--text euiHeaderLink"
                   activeStyle={{ color: "#006BB4" }}
                 >

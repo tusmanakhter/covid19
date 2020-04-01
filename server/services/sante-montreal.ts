@@ -11,8 +11,10 @@ const getMontrealData = async () => {
   if ( montrealData === undefined ) {
     const response: any = await got(baseUrl).text();
     const html = cheerio.load(response);
-    const table = html('table').first().find('tbody tr');
-    const time = html('h4').first().text().trim().replace(/Last data update: |\.|\,/g, '').toUpperCase();
+    const header = html("th:contains('Borough or linked city*')");
+    const timeRegex = /TOTAL NUMBER OF CONFIRMED CASES (\d+) (\w+), (\d+:\d+) (\w)\.(\w)\./i;
+    const time = header.next('th').text().trim().replace(timeRegex, '$1 $2 2020 $3 $4$5').toUpperCase();
+    const table = header.closest('table').find('tbody tr');
     const neighbourhoodData = table.map((index, element) => {
       let location = html(element).find('td:nth-of-type(1)').text().trim().replace(/\*/g, '');
       const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
