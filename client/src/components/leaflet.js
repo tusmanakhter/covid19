@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Map, CircleMarker, Popup, TileLayer } from 'react-leaflet'
-import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingChart } from '@elastic/eui';
+import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingChart, EuiPanel, EuiRadioGroup } from '@elastic/eui';
+import Control from 'react-leaflet-control';
 import './leaflet.css';
 
 const stat = (title, stat, color) => (
@@ -15,9 +16,38 @@ const stat = (title, stat, color) => (
   </EuiFlexGroup>
 )
 
+const getColor = (type) => {
+  switch (type.toLowerCase()) {
+    case 'confirmed':
+      return '#006BB4';
+    case 'recovered':
+      return '#017D73';
+    case 'deaths':
+      return '#BD271E';
+    default:
+      return '#1a1c21';
+  }
+}
+
+const radios = [
+  {
+    id: 'confirmed',
+    label: 'Confirmed',
+  },
+  {
+    id: 'recovered',
+    label: 'Recovered',
+  },
+  {
+    id: 'deaths',
+    label: 'Deaths',
+  },
+];
+
 const Leaflet = ({ data, selectedData }) => {
   const [zoom, setZoom] = useState(2);
   const [position, setPosition] = useState([35,6]);
+  const [markerType, setMarkerType] = useState('confirmed');
   
   useEffect(() => {
     if (selectedData) {
@@ -44,10 +74,11 @@ const Leaflet = ({ data, selectedData }) => {
     markers = data.map(location => {
       const key = `${location.location.country}${location.location.province}`
       const coordinates = {lat: location.location.lat, lng: location.location.long};
-      const radius = Math.log10(location.latest.confirmed)*3;
-  
+      const radius = Math.log10(location.latest[markerType])*3;
+      const color = getColor(markerType);
+
       return (
-        <CircleMarker key={key} center={coordinates} radius={radius} stroke={false} fillOpacity={0.5}>
+        <CircleMarker key={key} center={coordinates} radius={radius} stroke={false} color={color} fillOpacity={0.5}>
           <Popup autoClose>
             {location.location.province ? 
               <>
@@ -85,6 +116,19 @@ const Leaflet = ({ data, selectedData }) => {
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
+            <Control position="bottomleft" >
+              <EuiPanel>
+                <EuiRadioGroup
+                  options={radios}
+                  idSelected={markerType}
+                  onChange={(option) => setMarkerType(option)}
+                  name="Marker type"
+                  legend={{
+                    children: <span>Marker Scale</span>,
+                  }}
+                />
+              </EuiPanel>
+            </Control>
             {markers}
           </Map>
         ) : (
