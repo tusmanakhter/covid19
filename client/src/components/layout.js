@@ -46,7 +46,7 @@ const Layout = ({ children }) => {
               <p>Data provided by <a target="_blank" rel="noopener noreferrer" href="https://systems.jhu.edu/">JHU CSSE</a> on <a target="_blank" rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19">Github</a></p>
               <p>Montreal data provided by <a target="_blank" rel="noopener noreferrer" href="https://santemontreal.qc.ca/en/public/coronavirus-covid-19/">Santé Montréal</a></p>
               <p>Icon provided by <a target="_blank" rel="noopener noreferrer" href="https://www.iconfinder.com/justicon">Just Icon</a> licensed under <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
-              <p>Code available on <a target="_blank" rel="noopener noreferrer" href="https://github.com/tusmanakhter/covid19">Github</a> written by <a target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</a></p>
+              <p>Created by <a target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</a> | Support me on <a target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</a></p>
             </EuiText>
           </EuiFlexItem>
         </EuiFlexGroup>
