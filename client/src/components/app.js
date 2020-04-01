@@ -21,7 +21,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get('https://covid19.tusmanakhter.com/api').json();
+      const data = await ky.get('https://api.trackingcovid.info/api').json();
       const locationsArray = Object.entries(data.locations);
       const locationsValues = Object.values(data.locations).filter(location => location.location);
 

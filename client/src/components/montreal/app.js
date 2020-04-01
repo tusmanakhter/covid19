@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get('https://covid19.tusmanakhter.com/api/montreal').json();
+      const data = await ky.get('https://api.trackingcovid.info/api/montreal').json();
       const dict = data.locations.reduce((map, obj) => {
         const key = getKey(obj.location);
         map[key] = obj.confirmed;

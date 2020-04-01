@@ -41,7 +41,7 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get('https://covid19.tusmanakhter.com/api/montreal/geojson').json();
+      const data = await ky.get('https://api.trackingcovid.info/api/montreal/geojson').json();
       setGeoJson(data);
     })();
   }, []);

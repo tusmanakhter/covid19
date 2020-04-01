@@ -1,5 +1,5 @@
 module.exports = {
-  pathPrefix: "/covid19",
+  // pathPrefix: "/covid19",
   siteMetadata: {
     title: `Covid-19 Tracker`,
     description: ``,
