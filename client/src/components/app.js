@@ -16,7 +16,6 @@ const App = () => {
   const [selectedData, setSelectedData] = useState();
   const [tableData, setTableData] = useState([]);
   const [mapData, setMapData] = useState();
-  const [chartData, setChartData] = useState();
   const [isProvince, setIsProvince] = useState(false);
 
   useEffect(() => {
@@ -57,7 +56,6 @@ const App = () => {
       setMapData(locationsValues);
       setSelected('Global');
       setSelectedData(data.global);
-      setChartData(data.global.history);
       setCountryData(countryData);
       setProvinceData(provinceData);
       setTableData(countryData);
@@ -68,7 +66,6 @@ const App = () => {
   const selectRow = useCallback((selectedRow) => {
     setSelected(selectedRow);
     setSelectedData(data.locations[selectedRow]);
-    setChartData(data.locations[selectedRow].history);
     if (selectedRow in provinceData) {
       setTableData(provinceData[selectedRow]);
       setIsProvince(true);
@@ -79,7 +76,6 @@ const App = () => {
     if (key === 'Global') {
       setSelected(key);
       setSelectedData(data.global);
-      setChartData(data.global.history);
       setTableData(countryData);
       setIsProvince(false);
     } else {
@@ -112,7 +108,7 @@ const App = () => {
             </EuiFlexItem>
             <EuiFlexItem>
               <EuiPanel>
-                <Chart title={selected} data={chartData} />
+                <Chart title={selected} data={selectedData} />
               </EuiPanel>
             </EuiFlexItem>
           </EuiFlexGroup>

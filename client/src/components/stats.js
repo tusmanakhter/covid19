@@ -70,9 +70,7 @@ const Stats = ({ title, data, onBack }) => {
               </EuiFlexItem>
             </EuiFlexGroup>
           </EuiFlexItem>
-          <EuiFlexItem>
-            <EuiHorizontalRule margin="none" />
-          </EuiFlexItem>
+          <EuiHorizontalRule margin="none" />
           <EuiFlexItem>
             <EuiFlexGroup>
               <EuiFlexItem>

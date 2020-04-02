@@ -68,102 +68,15 @@ const getCategory = async (category: Category) => {
 }
 
 const mergeCategories = (confirmed: ILocationDict, recovered: ILocationDict, deaths: ILocationDict) => {
-  const globalHistory = {};
-  const countryHistory = {};
+  const merged = {};
+  updateMergedDict(merged, confirmed, 'confirmed');
+  updateMergedDict(merged, recovered, 'recovered');
+  updateMergedDict(merged, deaths, 'deaths');
 
-  const merged: any = {}
-  const locationKeys = Object.keys(confirmed);
-
-  for (const locationKey of locationKeys) {
-    const key = locationKey;
-    const locationConfirmed = confirmed[key];
-    const locationsRecovered = recovered[key];
-    const locationDeaths = deaths[key];
-    const { location, history: confirmedHistory } = locationConfirmed;
-
-    let recoveredHistory: IHistoryDict;
-    if (locationsRecovered) {
-      recoveredHistory = locationsRecovered.history;
-    } else {
-      recoveredHistory = {}
-    }
-
-    let deathsHistory: IHistoryDict;
-    if (locationDeaths) {
-      deathsHistory = locationDeaths.history;
-    } else {
-      deathsHistory = {}
-    }
-
-    const history = [];
-    const dateKeys = Object.keys(confirmedHistory);
-    for (const dateKey of dateKeys) {
-      const dateConfirmed = confirmedHistory[dateKey];
-
-      let dateRecovered = recoveredHistory[dateKey]
-      if (!dateRecovered) {
-        dateRecovered = 0
-      }
-
-      let dateDeaths = deathsHistory[dateKey]
-      if (!dateDeaths) {
-        dateDeaths = 0
-      }
-
-      if (!globalHistory[dateKey]) {
-        globalHistory[dateKey] = {
-          confirmed: 0,
-          recovered: 0,
-          deaths: 0,
-        }
-      };
-
-      globalHistory[dateKey].confirmed += dateConfirmed;
-      globalHistory[dateKey].recovered += dateRecovered;
-      globalHistory[dateKey].deaths += dateDeaths;
-
-      if (location.province !== '') {
-        if (!countryHistory[location.country]) {
-          countryHistory[location.country] = {};
-        };
-
-        if (!countryHistory[location.country][dateKey]) {
-          countryHistory[location.country][dateKey] = {
-            confirmed: 0,
-            recovered: 0,
-            deaths: 0,
-          }
-        }
-
-        countryHistory[location.country][dateKey].confirmed += dateConfirmed;
-        countryHistory[location.country][dateKey].recovered += dateRecovered;
-        countryHistory[location.country][dateKey].deaths += dateDeaths;
-      };
-
-      const historyDate = {
-        date: parseInt(dateKey, 10),
-        confirmed: dateConfirmed,
-        recovered: dateRecovered,
-        deaths: dateDeaths,
-      }
-      history.push(historyDate);
-    }
-
-    merged[key] = {
-      location,
-      history
-    }
-  }
-
-  merged.global = { history: dictToArray(globalHistory) };
-
-  const countryEntries = Object.entries<IStatsDict>(countryHistory);
-
-  for (const countryEntry of countryEntries) {
-    const key = countryEntry[0];
-    const value = countryEntry[1];
-    merged[key] = { history: dictToArray(value) };
-  }
+  const mergedValues = Object.entries<any>(merged);
+  mergedValues.forEach(([location, value]) => {
+    merged[location] = { history: dictToArray(value) }
+  })
 
   return merged;
 }
@@ -190,6 +103,63 @@ const getAllCategories = async () => {
 
   const merged = mergeCategories(confirmed, recovered, deaths);
   return merged;
+}
+
+const updateMergedDict = (merged: Object, dict: ILocationDict, type: string) => {
+  if (!merged['global']) {
+    merged['global'] = {};
+  } 
+
+  const locationKeys = Object.entries(dict);
+
+  locationKeys.forEach(([locationKey, locationData]) => {
+    const location = locationData.location;
+    const dates = Object.entries(locationData.history);
+    const isProvince = location.province !== '';
+    const country = location.country;
+
+    if (!merged[locationKey]) {
+      merged[locationKey] = {};
+    }
+
+    if (isProvince && !merged[country]) {
+      merged[country] = {};
+    }
+
+    dates.forEach(([date, count]) => {
+      if (!merged[locationKey][date]) {
+        merged[locationKey][date] = {};
+      }
+
+      if (!merged[locationKey][date][type]) {
+        merged[locationKey][date][type] = 0;
+      }
+
+      merged[locationKey][date][type] += count;
+
+      if (isProvince) {
+        if (!merged[country][date]) {
+          merged[country][date] = {};
+        }
+
+        if (!merged[country][date][type]) {
+          merged[country][date][type] = 0;
+        }
+
+        merged[country][date][type] += count;
+      }
+
+      if (!merged['global'][date]) {
+        merged['global'][date] = {};
+      }
+      
+      if (!merged['global'][date][type]) {
+        merged['global'][date][type] = 0;
+      }
+
+      merged['global'][date][type] += count;
+    });
+  });
 }
 
 interface ILocationDict {

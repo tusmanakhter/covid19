@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Chart as ElasticChart,
@@ -19,6 +19,7 @@ const numberFormatter = (value) => value.toLocaleString();
 
 const Chart = ({ title, data }) => {
   const [logScale, setLogScale] = useState(false);
+  const [history, setHistory] = useState();
 
   let scaleType;
   if (logScale) {
@@ -27,10 +28,25 @@ const Chart = ({ title, data }) => {
     scaleType = ScaleType.Linear;
   }
 
+  useEffect(() => {
+    if (data) {
+      const dataHistory = [...data.history];
+      const date = (new Date()).setUTCHours(0,0,0,0);
+      const latest = {
+        date,
+        confirmed: data.latest.confirmed,
+        recovered: data.latest.recovered,
+        deaths: data.latest.deaths,
+      }
+      dataHistory.push(latest);
+      setHistory(dataHistory);
+    }
+  }, [data]);
+
   return (
     <>
       {
-        data ? (
+        history ? (
           <EuiFlexGroup direction="column">
             <EuiFlexItem grow={false}>
               <EuiFlexGroup alignItems="center">
@@ -60,7 +76,7 @@ const Chart = ({ title, data }) => {
                   name="Confirmed"
                   xScaleType={ScaleType.Time}
                   yScaleType={scaleType}
-                  data={data}
+                  data={history}
                   xAccessor={"date"}
                   yAccessors={["confirmed"]}
                   color={"#006BB4"}
@@ -70,13 +86,14 @@ const Chart = ({ title, data }) => {
                       fill: "#006BB4",
                     }
                   }}
+                  timeZone="GMT"
                 />
                 <LineSeries
                   id="recovered"
                   name="Recovered"
                   xScaleType={ScaleType.Time}
                   yScaleType={scaleType}
-                  data={data}
+                  data={history}
                   xAccessor={"date"}
                   yAccessors={["recovered"]}
                   color={"#017D73"}
@@ -86,13 +103,14 @@ const Chart = ({ title, data }) => {
                       fill: "#017D73",
                     }
                   }}
+                  timeZone="GMT"
                 />
                 <LineSeries
                   id="deaths"
                   name="Deaths"
                   xScaleType={ScaleType.Time}
                   yScaleType={scaleType}
-                  data={data}
+                  data={history}
                   xAccessor={"date"}
                   yAccessors={["deaths"]}
                   color={"#BD271E"}
@@ -102,6 +120,7 @@ const Chart = ({ title, data }) => {
                       fill: "#BD271E",
                     }
                   }}
+                  timeZone="GMT"
                 />
                 <Axis
                   id="bottom-axis"
@@ -131,7 +150,7 @@ const Chart = ({ title, data }) => {
 }
 
 Chart.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.object,
   title: PropTypes.string,
 }
 
