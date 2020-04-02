@@ -1,12 +1,12 @@
 import React from "react"
 
-import App from "../components/app"
+import App from "../components/global/app"
 import SEO from "../components/seo"
 
 const GlobalPage = () => {
   return (
     <>
-      <SEO title="Global COVID-19 Tracker" />
+      <SEO title="COVID-19 Tracker" />
       <App />
     </>
   )

@@ -6,7 +6,7 @@ import SEO from "../components/seo"
 const MontrealPage = () => {
   return (
     <>
-      <SEO title="COVID-19 Montreal Tracker" />
+      <SEO title="COVID-19 Tracker - Montreal" />
       <Montreal />
     </>
   )

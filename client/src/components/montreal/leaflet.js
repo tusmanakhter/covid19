@@ -6,7 +6,7 @@ import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiP
 import { useMediaQuery } from 'react-responsive'
 import ky from 'ky';
 import getKey from '../../helpers/key';
-import '../leaflet.css';
+import '../global/leaflet.css';
 import './leaflet.css';
 
 const getColor = (d) => {

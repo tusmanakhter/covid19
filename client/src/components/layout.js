@@ -29,24 +29,28 @@ const Layout = ({ children }) => {
                 >
                   Montreal
                 </Link>
+                <Link to="/about/"
+                  className="euiButtonEmpty euiButtonEmpty--text euiHeaderLink"
+                  activeStyle={{ color: "#006BB4" }}
+                >
+                  About
+                </Link>
                 <a href='https://ko-fi.com/P5P21KE6M' target='_blank' rel="noopener noreferrer"><img style={{border: 0, height: 36, margin: '2px 8px'}} src='https://cdn.ko-fi.com/cdn/kofi1.png?v=2' alt='Buy Me a Coffee at ko-fi.com' /></a>
               </EuiHeaderLinks>
             )
           }
         </EuiHeaderSection>
       </EuiHeader>
-      <EuiPage style={{padding: 8}}>
+      <EuiPage className="page">
         <EuiFlexGroup direction="column" gutterSize="none">
           <EuiFlexItem>
             {children}
           </EuiFlexItem>
           <EuiSpacer />
-          <EuiFlexItem>
+          <EuiFlexItem grow={false}>
             <EuiText textAlign="center" className="footer">
-              <p>Data provided by <a target="_blank" rel="noopener noreferrer" href="https://systems.jhu.edu/">JHU CSSE</a> on <a target="_blank" rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19">Github</a></p>
-              <p>Montreal data provided by <a target="_blank" rel="noopener noreferrer" href="https://santemontreal.qc.ca/en/public/coronavirus-covid-19/">Santé Montréal</a></p>
-              <p>Icon provided by <a target="_blank" rel="noopener noreferrer" href="https://www.iconfinder.com/justicon">Just Icon</a> licensed under <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
-              <p>Created by <a target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</a> | Support me on <a target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</a></p>
+              <p>Created by <a target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</a></p>
+              <p>Support me on <a target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</a></p>
             </EuiText>
           </EuiFlexItem>
         </EuiFlexGroup>

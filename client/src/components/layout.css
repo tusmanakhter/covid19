@@ -1,6 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,400i,700,700i');
 @import url('https://rsms.me/inter/inter-ui.css');
 
+html, body, #___gatsby, #gatsby-focus-wrapper {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+}
+
+.page {
+  min-height: 100%;
+  padding: 8px;
+}
+
 .footer p {
   margin-bottom: 5px;
 }

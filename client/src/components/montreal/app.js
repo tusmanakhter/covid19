@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../layout'
-import SEO from '../seo'
 import Table from './table';
 import Stat from './stat';
 import Leaflet from './leaflet';
@@ -43,7 +42,6 @@ const App = () => {
 
   return (
     <Layout>
-      <SEO title="Montreal Covid-19 Tracker" />
       <EuiFlexGroup gutterSize="s">
         <EuiFlexItem grow={1}>
           <EuiPanel>
