@@ -31,7 +31,7 @@ const Chart = ({ title, data }) => {
   useEffect(() => {
     if (data) {
       const dataHistory = [...data.history];
-      const date = (new Date()).setUTCHours(0,0,0,0);
+      const date = (new Date()).setHours(0,0,0,0);
       const latest = {
         date,
         confirmed: data.latest.confirmed,
@@ -75,7 +75,7 @@ const Chart = ({ title, data }) => {
                 <LineSeries
                   id="confirmed"
                   name="Confirmed"
-                  xScaleType={ScaleType.Time}
+                  xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
                   data={history}
                   xAccessor={"date"}
@@ -87,12 +87,11 @@ const Chart = ({ title, data }) => {
                       fill: "#006BB4",
                     }
                   }}
-                  timeZone="GMT"
                 />
                 <LineSeries
                   id="recovered"
                   name="Recovered"
-                  xScaleType={ScaleType.Time}
+                  xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
                   data={history}
                   xAccessor={"date"}
@@ -104,12 +103,11 @@ const Chart = ({ title, data }) => {
                       fill: "#017D73",
                     }
                   }}
-                  timeZone="GMT"
                 />
                 <LineSeries
                   id="deaths"
                   name="Deaths"
-                  xScaleType={ScaleType.Time}
+                  xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
                   data={history}
                   xAccessor={"date"}
@@ -121,12 +119,11 @@ const Chart = ({ title, data }) => {
                       fill: "#BD271E",
                     }
                   }}
-                  timeZone="GMT"
                 />
                 <LineSeries
                   id="active"
                   name="Active"
-                  xScaleType={ScaleType.Time}
+                  xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
                   data={history}
                   xAccessor={"date"}
@@ -138,7 +135,6 @@ const Chart = ({ title, data }) => {
                       fill: "#F5A700",
                     }
                   }}
-                  timeZone="GMT"
                 />
                 <Axis
                   id="bottom-axis"

@@ -25,7 +25,7 @@ const Chart = ({ title, data }) => {
   useEffect(() => {
     if (data) {
       const dataHistory = [...data.history];
-      const date = (new Date()).setUTCHours(0,0,0,0);
+      const date = (new Date()).setHours(0,0,0,0);
       const latest = {
         date,
         confirmed: data.latest.confirmed,
@@ -84,7 +84,7 @@ const Chart = ({ title, data }) => {
             <BarSeries
               id={typeLower}
               name={type}
-              xScaleType={ScaleType.Time}
+              xScaleType={ScaleType.Date}
               yScaleType={ScaleType.Linear}
               data={daily}
               xAccessor={"date"}
@@ -96,7 +96,6 @@ const Chart = ({ title, data }) => {
                   fill: color,
                 }
               }}
-              timeZone="GMT"
             />
             <Axis
               id="bottom-axis"

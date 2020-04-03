@@ -45,7 +45,8 @@ const getCategory = async (category: Category) => {
 
     const history = {}
     for (const dataEntry of dateEntries) {
-      const dateKey = new Date(dataEntry[0]).getTime();
+      const dateKey = dataEntry[0];
+
       const value = parseInt(dataEntry[1], 10);
       history[dateKey] = value;
     }
@@ -97,7 +98,7 @@ const dictToArray = (dictionary: IStatsDict) => {
       value.recovered = 0;
     }
     value.active = value.confirmed - (value.recovered + value.deaths);
-    array.push({ date: parseInt(key, 10), ...value });
+    array.push({ date: key, ...value });
   }
 
   return array;
