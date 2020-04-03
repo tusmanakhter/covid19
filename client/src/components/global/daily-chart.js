@@ -48,9 +48,6 @@ const Chart = ({ title, data }) => {
           previousValue = dataHistory[index - 1];
         }
 
-        const active = item.confirmed - (item.recovered + item.deaths);
-        const previousActive = previousValue.confirmed - (previousValue.recovered + previousValue.deaths);
-
         return {
           date: item.date,
           confirmed: item.confirmed - previousValue.confirmed,

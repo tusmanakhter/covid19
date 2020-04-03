@@ -14,8 +14,8 @@ const BackButton = ({ data, onBack }) => {
   if (backKey) {
     return (
       <>
-        <EuiButton fill iconType="arrowLeft" fullWidth onClick={() => onBack(backKey)} aria-label="Back">
-          Return to {backKey}
+        <EuiButton fill fullWidth onClick={() => onBack(backKey)} aria-label="Back">
+          Show {backKey} stats
         </EuiButton>
       </>
     )
