@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { EuiPage, EuiHeader, EuiHeaderSection, EuiHeaderSectionItem, EuiHeaderLinks, EuiHeaderLogo, EuiFlexGroup, EuiFlexItem, EuiText, EuiSpacer, EuiPopover } from '@elastic/eui';
-import { Link } from 'gatsby'
+import { Link } from 'gatsby';
 import logoSvg from '../images/corona.svg';
 import '../themes/theme_light.scss';
 import './layout.css';
