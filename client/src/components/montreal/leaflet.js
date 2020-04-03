@@ -9,6 +9,17 @@ import getKey from '../../helpers/key';
 import '../global/leaflet.css';
 import './leaflet.css';
 
+const stat = (title, stat) => (
+  <EuiFlexGroup responsive={false} gutterSize="none">
+    <EuiFlexItem style={{marginRight: 16}}>
+      <EuiText size="s">{title}: </EuiText>
+    </EuiFlexItem>
+    <EuiFlexItem grow={false}>
+      <EuiText size="s">{stat.toLocaleString()}</EuiText>
+    </EuiFlexItem>
+  </EuiFlexGroup>
+)
+
 const getColor = (d) => {
   return d > 1000 ? '#800026' :
          d > 500  ? '#BD0026' :
@@ -147,22 +158,20 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
             }
             <Control position="topright" >
               <EuiPanel>
-                <EuiText className="info">
-                  <small>
+                <EuiText className="info" size="s">
                     <p><b><EuiTextColor color="subdued">Montreal Confirmed COVID-19 Cases</EuiTextColor></b></p>
                     {
                       hovered ? (
                         <>
                           <p><b>{hovered.location}</b></p>
-                          <p>{hovered.confirmed.toLocaleString()} confirmed</p>
-                          <p>{hovered.perHundred.toLocaleString()} confirmed/100k</p>
-                          <p>{hovered.distribution.toLocaleString()}% of all confirmed cases</p>
+                          {stat('Confirmed', hovered.confirmed)}
+                          {stat('Confirmed/100k', hovered.perHundred)}
+                          {stat('Distribution (%)', hovered.distribution)}
                         </>
                       ) : (
                         <p>Hover over a borrough/linked city</p>
                       )
                     }
-                  </small>
                 </EuiText>
               </EuiPanel>
             </Control>

@@ -8,7 +8,7 @@ const baseUrl = 'https://santemontreal.qc.ca/en/public/coronavirus-covid-19';
 
 const getMontrealData = async () => {
   let montrealData = cache.get("montreal");
-  montrealData = undefined;
+  
   if ( montrealData === undefined ) {
     const response: any = await got(baseUrl).text();
     const html = cheerio.load(response);
