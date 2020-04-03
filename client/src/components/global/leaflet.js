@@ -24,6 +24,8 @@ const getColor = (type) => {
       return '#017D73';
     case 'deaths':
       return '#BD271E';
+    case 'active':
+      return '#F5A700';
     default:
       return '#1a1c21';
   }
@@ -41,6 +43,10 @@ const radios = [
   {
     id: 'deaths',
     label: 'Deaths',
+  },
+  {
+    id: 'active',
+    label: 'Active',
   },
 ];
 
@@ -70,12 +76,12 @@ const Leaflet = ({ data, selectedData }) => {
   }, []);
 
   let markers = null;
+  const color = getColor(markerType);
   if (data) {
     markers = data.map(location => {
       const key = `${location.location.country}${location.location.province}`
       const coordinates = {lat: location.location.lat, lng: location.location.long};
       const radius = Math.log10(location.latest[markerType])*3;
-      const color = getColor(markerType);
 
       return (
         <CircleMarker key={key} center={coordinates} radius={radius} stroke={false} color={color} fillOpacity={0.5}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../layout'
 import Table from './table';
-import Stat from './stat';
+import Stats from './stats';
 import Leaflet from './leaflet';
 import ky from 'ky';
 import { EuiPanel, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
@@ -9,7 +9,8 @@ import getKey from '../../helpers/key';
 
 const App = () => {
   const [mapData, setMapData] = useState();
-  const [total, setTotal] = useState();
+  const [confirmed, setConfirmed] = useState();
+  const [perHundred, setPerHundred] = useState();
   const [lastUpdate, setLastUpdate] = useState();
   const [tableData, setTableData] = useState([]);
   const [mouseEnter, setMouseEnter] = useState();
@@ -27,15 +28,16 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get('https://api.trackingcovid.info/api/montreal').json();
+      const data = await ky.get(`${process.env.API_URL}/api/montreal`).json();
       const dict = data.locations.reduce((map, obj) => {
         const key = getKey(obj.location);
-        map[key] = obj.confirmed;
+        map[key] = { ...obj };
         return map;
       }, {});
       setTableData(data.locations);
       setMapData(dict);
-      setTotal(data.total);
+      setConfirmed(data.confirmed);
+      setPerHundred(data.perHundred);
       setLastUpdate(data.lastUpdate);
     })();
   }, []);
@@ -47,7 +49,7 @@ const App = () => {
           <EuiPanel>
             <EuiFlexGroup direction="column">
               <EuiFlexItem>
-                <Stat total={total} lastUpdate={lastUpdate} />
+                <Stats confirmed={confirmed} perHundred={perHundred} lastUpdate={lastUpdate} />
               </EuiFlexItem>
               <EuiFlexItem>
                 <Table data={tableData} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />

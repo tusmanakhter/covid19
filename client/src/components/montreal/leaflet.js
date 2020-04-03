@@ -41,15 +41,15 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get('https://api.trackingcovid.info/api/montreal/geojson').json();
-      setGeoJson(data);
+      const geoJsonData = await ky.get(`${process.env.API_URL}/api/montreal/geojson`).json();
+      setGeoJson(geoJsonData);
     })();
   }, []);
 
   const getStyle = useCallback(
     (feature) => {
       const key = getKey(feature.properties.district);
-      const amount = data[key];
+      const amount = data[key].confirmed;
   
       return {
         fillColor: getColor(amount),
@@ -67,9 +67,11 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
     const layer = e.target;
     const location = layer.feature.properties.district;
     const key =  getKey(location);
-    const confirmed = data[key];
+    const confirmed = data[key].confirmed;
+    const perHundred = data[key].perHundred;
+    const distribution = data[key].distribution;
     if (e.containerPoint) {
-      setHovered({location, confirmed});
+      setHovered({location, confirmed, perHundred, distribution });
     }
 
     layer.setStyle({
@@ -152,7 +154,9 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
                       hovered ? (
                         <>
                           <p><b>{hovered.location}</b></p>
-                          <p>{hovered.confirmed.toLocaleString()} people</p>
+                          <p>{hovered.confirmed.toLocaleString()} confirmed</p>
+                          <p>{hovered.perHundred.toLocaleString()} confirmed/100k</p>
+                          <p>{hovered.distribution.toLocaleString()}% of all confirmed cases</p>
                         </>
                       ) : (
                         <p>Hover over a borrough/linked city</p>
@@ -169,7 +173,7 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
             </Control>
           </Map>        
         ) : (
-          <EuiFlexGroup className="chart" alignItems="center" justifyContent="center" gutterSize="none">
+          <EuiFlexGroup className="chart" alignItems="center" justifyContent="center">
             <EuiFlexItem grow={false}>
               <EuiLoadingChart size="xl" />
             </EuiFlexItem>

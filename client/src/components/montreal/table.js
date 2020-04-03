@@ -15,7 +15,23 @@ const columns = [
     sortable: true,
     dataType: 'number',
     render: (value) => value.toLocaleString(),
-    width: '30%',
+    width: "20%",
+  },
+  {
+    name: 'Distribution (%)',
+    field: 'distribution',
+    sortable: true,
+    dataType: 'number',
+    render: (value) => value.toLocaleString(),
+    width: "20%",
+  },
+  {
+    name: 'Confirmed/100k',
+    field: 'perHundred',
+    sortable: true,
+    dataType: 'number',
+    render: (value) => value.toLocaleString(),
+    width: "20%",
   },
 ]
 

@@ -21,7 +21,6 @@ const getCategory = async (category: Category) => {
   const url = `${baseUrl}${category}_global.csv`
 
   const response = await got(url).text();
-
   const records = parse(response, {
     columns: true,
     skip_empty_lines: true
@@ -88,6 +87,16 @@ const dictToArray = (dictionary: IStatsDict) => {
   for (const dateKey of dateKeys) {
     const key = dateKey[0];
     const value = dateKey[1];
+    if (!value.confirmed) {
+      value.confirmed = 0;
+    }
+    if (!value.deaths) {
+      value.deaths = 0;
+    }
+    if (!value.recovered) {
+      value.recovered = 0;
+    }
+    value.active = value.confirmed - (value.recovered + value.deaths);
     array.push({ date: parseInt(key, 10), ...value });
   }
 

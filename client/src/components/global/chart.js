@@ -37,6 +37,7 @@ const Chart = ({ title, data }) => {
         confirmed: data.latest.confirmed,
         recovered: data.latest.recovered,
         deaths: data.latest.deaths,
+        active: data.latest.active,
       }
       dataHistory.push(latest);
       setHistory(dataHistory);
@@ -118,6 +119,23 @@ const Chart = ({ title, data }) => {
                   pointStyleAccessor={() => {
                     return {
                       fill: "#BD271E",
+                    }
+                  }}
+                  timeZone="GMT"
+                />
+                <LineSeries
+                  id="active"
+                  name="Active"
+                  xScaleType={ScaleType.Time}
+                  yScaleType={scaleType}
+                  data={history}
+                  xAccessor={"date"}
+                  yAccessors={["active"]}
+                  color={"#F5A700"}
+                  curve={CurveType.LINEAR}
+                  pointStyleAccessor={() => {
+                    return {
+                      fill: "#F5A700",
                     }
                   }}
                   timeZone="GMT"

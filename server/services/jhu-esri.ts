@@ -2,8 +2,8 @@
 import got from "got";
 
 const baseUrl = "https://services9.arcgis.com/N9p5hsImWXAccRNI/arcgis/rest/services/Nc2JKvYFoAEOFCG5JSI6/FeatureServer";
-const countryUrl = `${baseUrl}/2/query?f=json&returnGeometry=false&where=Confirmed%20%3E%200&outFields=Country_Region,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths,Active`;
-const provinceUrl = `${baseUrl}/3/query?f=json&where=Confirmed%20%3E%200%20AND%20Province_State%20IS%20NOT%20NULL&returnGeometry=false&outFields=Country_Region,Province_State,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths,Active`;
+const countryUrl = `${baseUrl}/2/query?f=json&returnGeometry=false&where=Confirmed%20%3E%200&outFields=Country_Region,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths`;
+const provinceUrl = `${baseUrl}/3/query?f=json&where=Confirmed%20%3E%200%20AND%20Province_State%20IS%20NOT%20NULL&returnGeometry=false&outFields=Country_Region,Province_State,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths`;
 
 const headers = {
   'authority': 'services9.arcgis.com',
@@ -24,7 +24,6 @@ enum Properties {
   Confirmed = "Confirmed",
   Recovered = "Recovered",
   Deaths = "Deaths",
-  Active = "Active",
   LastUpdate = "Last_Update"
 }
 
@@ -42,7 +41,7 @@ const getLatestDict = async (url: string) => {
     const confirmed = record[Properties.Confirmed];
     const recovered = record[Properties.Recovered];
     const deaths = record[Properties.Deaths];
-    const active = record[Properties.Active];
+    const active = confirmed - (recovered + deaths);
     const lastUpdate = record[Properties.LastUpdate];
 
     let key: string;
@@ -79,7 +78,7 @@ const getLatest = async () => {
     getLatestDict(provinceUrl),
     getLatestDict(countryUrl)
   ]);
-
+  
   const latestCountryValues = Object.values(country);
   const global = latestCountryValues.reduce((a: any, b: any) => {
     return {

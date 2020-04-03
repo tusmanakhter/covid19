@@ -4,6 +4,7 @@ import Table from './table';
 import Stats from './stats';
 import Leaflet from './leaflet';
 import Chart from './chart';
+import DailyChart from './daily-chart';
 import ky from 'ky';
 import { EuiPanel, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
 
@@ -19,7 +20,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get('https://api.trackingcovid.info/api').json();
+      const data = await ky.get(`${process.env.API_URL}/api`).json();
       const locationsArray = Object.entries(data.locations);
       const locationsValues = Object.values(data.locations).filter(location => location.location);
 
@@ -84,32 +85,39 @@ const App = () => {
 
   return (
     <Layout>
-      <EuiFlexGroup gutterSize="s">
-        <EuiFlexItem grow={1}>
-          <EuiPanel>
-            <EuiFlexGroup direction="column">
-              <EuiFlexItem>
-                <Stats title={selected} data={selectedData} onBack={resetSelected}/>
-              </EuiFlexItem>
-              <EuiFlexItem>
-                <Table data={tableData} onRowClick={selectRow} isProvince={isProvince} />
-              </EuiFlexItem>
-            </EuiFlexGroup>
-          </EuiPanel>
-        </EuiFlexItem>
-        <EuiFlexItem grow={2}>
-          <EuiFlexGroup gutterSize="s" direction="column">
-            <EuiFlexItem>
-              <EuiPanel paddingSize="none">
-                <Leaflet data={mapData} selectedData={selectedData} />
+      <EuiFlexGroup gutterSize="s" direction="column">
+        <EuiFlexItem>
+          <EuiFlexGroup gutterSize="s">
+            <EuiFlexItem grow={1}>
+              <EuiPanel>
+                <EuiFlexGroup direction="column">
+                  <EuiFlexItem>
+                    <Stats title={selected} data={selectedData} onBack={resetSelected}/>
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <Table data={tableData} onRowClick={selectRow} isProvince={isProvince} />
+                  </EuiFlexItem>
+                </EuiFlexGroup>
               </EuiPanel>
             </EuiFlexItem>
-            <EuiFlexItem>
-              <EuiPanel>
-                <Chart title={selected} data={selectedData} />
-              </EuiPanel>
+            <EuiFlexItem grow={2}>
+              <EuiFlexGroup gutterSize="s" direction="column">
+                <EuiFlexItem>
+                  <EuiPanel paddingSize="none">
+                    <Leaflet data={mapData} selectedData={selectedData} />
+                  </EuiPanel>
+                </EuiFlexItem>
+                <EuiFlexItem>
+                  <EuiPanel>
+                    <Chart title={selected} data={selectedData} />
+                  </EuiPanel>
+                </EuiFlexItem>
+              </EuiFlexGroup>
             </EuiFlexItem>
           </EuiFlexGroup>
+        </EuiFlexItem>
+        <EuiFlexItem>
+          <DailyChart title={selected} data={selectedData} />
         </EuiFlexItem>
       </EuiFlexGroup>
     </Layout>

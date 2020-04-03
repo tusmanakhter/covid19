@@ -9,13 +9,17 @@
 }
 
 .chart {
-  height: 500px;
+  height: 400px;
 }
 
 @media only screen and (max-width: 767px) {
   .chart  {
-    height: 400px;
+    height: 300px;
   }
+}
+
+.daily-chart {
+  height: 300px;
 }
 
 @media only screen and (max-width: 767px) {
