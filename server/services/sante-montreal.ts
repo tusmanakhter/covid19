@@ -24,7 +24,7 @@ const getMontrealData = async () => {
   const total = neighbourhoodData.pop();
   neighbourhoodData.sort((a, b) => b.confirmed - a.confirmed);
 
-  const timeRegex = /.*extracted on (\w+) (\d+)(?:\w\w)* (\d+:\d+) (\w\w).*/i;
+  const timeRegex = /.*extracted\son\s(\w+)\s(\d+)(?:\w\w)*\s(\d+:\d+)\s(\w\w).*/i;
   const time = table.next().text().trim().replace(timeRegex, '$1 $2 2020 $3 $4 EDT').toUpperCase();
   const lastUpdate = dayjs(time);
 
