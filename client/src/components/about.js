@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from './layout'
 import { EuiPanel, EuiText } from '@elastic/eui';
+import { OutboundLink } from 'gatsby-plugin-gtag'
 import './about.css';
 
 const About = () => {
@@ -9,7 +10,7 @@ const About = () => {
       <EuiPanel className="panel">
         <EuiText textAlign="center">
           <h2>About</h2>
-          <p>This website was created by <a target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</a>. Show your support on <a target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</a>.</p>
+          <p>This website was created by <OutboundLink target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</OutboundLink>. Show your support on <OutboundLink target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</OutboundLink>.</p>
           <p>Contact <a target="_blank" rel="noopener noreferrer" href="mailto:dev@trackingcovid.info?Subject=Covid%20Tracker">dev@trackingcovid.info</a> for any suggestions, bugs or issues.</p>
           <h2>Sources</h2>
           <p>Global Data provided by <a target="_blank" rel="noopener noreferrer" href="https://systems.jhu.edu/">JHU CSSE</a> on <a target="_blank" rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19">Github</a></p>
