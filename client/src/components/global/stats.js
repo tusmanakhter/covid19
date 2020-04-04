@@ -19,7 +19,7 @@ const getIncrease = (stat, data) => {
 
   return (
     <EuiText textAlign="center" size="xs">
-      (<EuiIcon type="sortUp" />{increase} / {percentage}%)
+      (<EuiIcon type="sortUp" />{increase.toLocaleString()} / {percentage}%)
     </EuiText>
   )
 }

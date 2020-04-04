@@ -6,7 +6,6 @@ import {
   Axis,
   BarSeries,
   ScaleType,
-  CurveType,
   timeFormatter
 } from '@elastic/charts';
 import { EuiLoadingChart, EuiFlexItem, EuiFlexGroup, EuiPanel, EuiTitle, EuiHorizontalRule } from '@elastic/eui';
