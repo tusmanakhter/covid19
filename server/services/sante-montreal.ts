@@ -38,4 +38,25 @@ const getMontrealData = async () => {
   return montrealData;
 }
 
-export { getMontrealData };
+const getMontrealAgeData = async () => {
+  const response: any = await got(baseUrl).text();
+  const html = cheerio.load(response);
+  const header = html("th:contains('Age group')");
+  const table = header.closest('table');
+  const trs = table.find('tbody tr');
+  const ageData = trs.map((index, element) => {
+    const ageGroup = html(element).find('td:nth-of-type(1)').text().trim();
+    const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
+    const confirmed = parseInt(confirmedString.replace(/,|</g, ''), 10);
+    const distributionString = html(element).find('td:nth-of-type(3)').text();
+    const distribution = parseFloat(distributionString.replace(/\s/g, '0'));
+    const perHundredString = html(element).find('td:nth-of-type(4)').text();
+    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*\s/g, '0'));
+    return { ageGroup, confirmed, distribution, perHundred }
+  }).get();
+  ageData.pop();
+
+  return ageData;
+}
+
+export { getMontrealData, getMontrealAgeData };

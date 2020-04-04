@@ -90,12 +90,6 @@ const Chart = ({ title, data }) => {
               xAccessor={"date"}
               yAccessors={[typeLower]}
               color={color}
-              curve={CurveType.LINEAR}
-              pointStyleAccessor={() => {
-                return {
-                  fill: color,
-                }
-              }}
             />
             <Axis
               id="bottom-axis"

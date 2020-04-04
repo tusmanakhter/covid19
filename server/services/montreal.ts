@@ -1,5 +1,5 @@
 import { getQuebecCases, getCanadaCases } from "./jhu-esri";
-import  { getMontrealData } from "../services/sante-montreal";
+import  { getMontrealData, getMontrealAgeData } from "../services/sante-montreal";
 import cache from "../helpers/cache";
 
 const getData = async () => {
@@ -23,10 +23,17 @@ const getData = async () => {
       cache.set("montrealRegionData", montrealRegionData, 600);
     }
 
+    let montrealAgeData: any = cache.get("montrealAgeData");
+    if ( montrealAgeData === undefined ) {
+      montrealAgeData = await getMontrealAgeData();
+      cache.set("montrealAgeData", montrealAgeData, 600);
+    }
+
     montrealData = {
       quebecCases,
       canadaCases,
       ...montrealRegionData,
+      ages: montrealAgeData,
     };
 
     cache.set("montreal", montrealData, 60);
