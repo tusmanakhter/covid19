@@ -22,6 +22,9 @@ const Stat = ({ stats }) => {
           <EuiFlexItem>
             <EuiFlexGroup direction="column">
               <EuiFlexItem>
+                <EuiTitle style={{textAlign: "center"}} size="xxs"><h5>* Per Capita on this page refers to per 100,000 people</h5></EuiTitle>
+              </EuiFlexItem>
+              <EuiFlexItem>
                 <EuiFlexGroup>
                   <EuiFlexItem>
                     <EuiStat title={stats.confirmed.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="secondary" reverse />
