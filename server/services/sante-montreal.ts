@@ -12,7 +12,7 @@ const getMontrealData = async () => {
   const table = header.closest('table');
   const trs = table.find('tbody tr');
   const neighbourhoodData = trs.map((index, element) => {
-    const location = html(element).find('td:nth-of-type(1)').text().trim().replace(/\*/g, '');
+    const location = html(element).find('td:nth-of-type(1)').text().trim().replace(/\*|\d/g, '');
     const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
     const confirmed = parseInt(confirmedString.replace(/,|</g, ''), 10);
     const distributionString = html(element).find('td:nth-of-type(3)').text();
