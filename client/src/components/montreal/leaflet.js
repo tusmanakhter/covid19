@@ -165,7 +165,7 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
                         <>
                           <p><b>{hovered.location}</b></p>
                           {stat('Confirmed', hovered.confirmed)}
-                          {stat('Confirmed/100k', hovered.perHundred)}
+                          {stat('Per Capita', hovered.perHundred)}
                           {stat('Distribution (%)', hovered.distribution)}
                         </>
                       ) : (

@@ -18,7 +18,7 @@ const columns = [
     width: "20%",
   },
   {
-    name: 'Confirmed/100k',
+    name: 'Per Capita',
     field: 'perHundred',
     sortable: true,
     dataType: 'number',

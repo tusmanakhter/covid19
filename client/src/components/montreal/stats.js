@@ -27,7 +27,7 @@ const Stat = ({ stats }) => {
                     <EuiStat title={stats.confirmed.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="secondary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.perHundred.toLocaleString()} description="Confirmed/100k" titleSize="m" textAlign="center" titleColor="secondary" reverse />
+                    <EuiStat title={stats.perHundred.toLocaleString()} description="Per Capita" titleSize="m" textAlign="center" titleColor="secondary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
                     <EuiStat title={`${((stats.confirmed/stats.quebecCases)*100).toFixed(2)}%`} description="of Quebec's cases" titleSize="m" textAlign="center" titleColor="primary" reverse />
