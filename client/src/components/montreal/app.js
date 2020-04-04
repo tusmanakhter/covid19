@@ -9,9 +9,7 @@ import getKey from '../../helpers/key';
 
 const App = () => {
   const [mapData, setMapData] = useState();
-  const [confirmed, setConfirmed] = useState();
-  const [perHundred, setPerHundred] = useState();
-  const [lastUpdate, setLastUpdate] = useState();
+  const [stats, setStats] = useState();
   const [tableData, setTableData] = useState([]);
   const [mouseEnter, setMouseEnter] = useState();
   const [mouseLeave, setMouseLeave] = useState();
@@ -36,9 +34,13 @@ const App = () => {
       }, {});
       setTableData(data.locations);
       setMapData(dict);
-      setConfirmed(data.confirmed);
-      setPerHundred(data.perHundred);
-      setLastUpdate(data.lastUpdate);
+      setStats({
+        confirmed: data.confirmed, 
+        perHundred: data.perHundred,
+        quebecCases: data.quebecCases,
+        canadaCases: data.canadaCases,
+        lastUpdate: data.lastUpdate,
+      });
     })();
   }, []);
 
@@ -49,7 +51,7 @@ const App = () => {
           <EuiPanel>
             <EuiFlexGroup direction="column">
               <EuiFlexItem>
-                <Stats confirmed={confirmed} perHundred={perHundred} lastUpdate={lastUpdate} />
+                <Stats stats={stats} />
               </EuiFlexItem>
               <EuiFlexItem>
                 <Table data={tableData} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />

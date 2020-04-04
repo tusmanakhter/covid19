@@ -1,7 +1,7 @@
 import { NowRequest, NowResponse } from "@now/node";
-import  { getMontrealData } from "../../services/sante-montreal";
+import  { getData } from "../../services/montreal";
 
 export default async (req: NowRequest, res: NowResponse) => {
-  const result = await getMontrealData();
+  const result = await getData();
   res.json(result);
 }

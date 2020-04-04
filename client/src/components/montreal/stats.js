@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import { EuiStat, EuiFlexItem, EuiFlexGroup, EuiTitle, EuiHorizontalRule, EuiLoadingContent, EuiText } from '@elastic/eui';
 import moment from 'moment';
 
-const Stat = ({ confirmed, perHundred, lastUpdate }) => {
+const Stat = ({ stats }) => {
   return (
     <>
       {
-        (confirmed && lastUpdate) ? (
+        ( stats ) ? (
         <EuiFlexGroup direction="column">
           <EuiFlexItem>
             <EuiFlexGroup>
@@ -24,15 +24,21 @@ const Stat = ({ confirmed, perHundred, lastUpdate }) => {
               <EuiFlexItem>
                 <EuiFlexGroup>
                   <EuiFlexItem>
-                    <EuiStat title={confirmed.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="primary" />
+                    <EuiStat title={stats.confirmed.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="secondary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={perHundred.toLocaleString()} description="Confirmed/100k" titleSize="m" textAlign="center" titleColor="primary" />
+                    <EuiStat title={stats.perHundred.toLocaleString()} description="Confirmed/100k" titleSize="m" textAlign="center" titleColor="secondary" reverse />
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <EuiStat title={`${((stats.confirmed/stats.quebecCases)*100).toFixed(2)}%`} description="of Quebec's cases" titleSize="m" textAlign="center" titleColor="primary" reverse />
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <EuiStat title={`${((stats.confirmed/stats.canadaCases)*100).toFixed(2)}%`} description="of Canada's cases" titleSize="m" textAlign="center" titleColor="danger" reverse />
                   </EuiFlexItem>
                 </EuiFlexGroup>
               </EuiFlexItem>
               <EuiFlexItem>
-                <EuiText textAlign="center">Last Update: {moment(lastUpdate).format('MMMM Do YYYY h:mm A')}</EuiText>
+                <EuiText textAlign="center">Last Update: {moment(stats.lastUpdate).format('MMMM Do YYYY h:mm A')}</EuiText>
               </EuiFlexItem>
             </EuiFlexGroup>
           </EuiFlexItem>
@@ -46,9 +52,7 @@ const Stat = ({ confirmed, perHundred, lastUpdate }) => {
 }
 
 Stat.propTypes = {
-  confirmed: PropTypes.number,
-  perHundred: PropTypes.number,
-  lastUpdate: PropTypes.number,
+  stats: PropTypes.object,
 }
 
 export default Stat

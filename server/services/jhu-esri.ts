@@ -96,4 +96,19 @@ const getLatest = async () => {
   return mergedDict;
 }
 
-export { getLatest };
+
+const getQuebecCases = async () => {
+  const url = `${baseUrl}/3/query?f=json&returnGeometry=false&where=Province_State%20%3D%20%27Quebec%27&outFields=Confirmed`
+  const response: any = await got(url, {headers}).json();
+  const confirmed = response.features[0].attributes.Confirmed;
+  return confirmed;
+}
+
+const getCanadaCases = async () => {
+  const url = `${baseUrl}/2/query?f=json&returnGeometry=false&where=Country_Region%20%3D%20%27Canada%27&outFields=Confirmed`
+  const response: any = await got(url, {headers}).json();
+  const confirmed = response.features[0].attributes.Confirmed;
+  return confirmed;
+}
+
+export { getLatest, getQuebecCases, getCanadaCases };
