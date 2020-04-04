@@ -12,7 +12,17 @@ const getData = async () => {
       const quebecCasesJHU = await getQuebecCases();
       const quebecCAData: any = await getConfirmedData();
       const quebecCasesCA = quebecCAData.data.pop().confirmed;
-      quebecCases = Math.max(quebecCasesCA, quebecCasesJHU);
+
+      if (quebecCasesJHU !== undefined && quebecCasesCA !== undefined) {
+        quebecCases = Math.max(quebecCasesCA, quebecCasesJHU);
+      } else if (quebecCasesJHU === undefined) {
+        quebecCases = quebecCasesCA;
+      } else if (quebecCasesCA === undefined) {
+        quebecCases = quebecCasesJHU;
+      } else {
+        quebecCases = 0;
+      }
+
       cache.set("quebecCases", quebecCases, 60);
     }
 
@@ -21,7 +31,17 @@ const getData = async () => {
       const canadaCasesJHU = await getCanadaCases();
       const canadaCAData: any = await getHistoryData();
       const canadaCasesCA = canadaCAData['Canada'].pop().confirmed;
-      canadaCases = Math.max(canadaCasesCA, canadaCasesJHU);
+
+      if (canadaCasesJHU !== undefined && canadaCasesCA !== undefined) {
+        canadaCases = Math.max(canadaCasesCA, canadaCasesJHU);
+      } else if (canadaCasesJHU === undefined) {
+        canadaCases = canadaCasesCA;
+      } else if (canadaCasesCA === undefined) {
+        canadaCases = canadaCasesJHU;
+      } else {
+        canadaCases = 0;
+      }
+
       cache.set("canadaCases", canadaCases, 60);
     }
 
