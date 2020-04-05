@@ -10,12 +10,18 @@ const About = () => {
       <EuiPanel className="panel">
         <EuiText textAlign="center">
           <h2>About</h2>
-          <p>This website was created by <OutboundLink target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</OutboundLink>. Show your support on <OutboundLink target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</OutboundLink>.</p>
+          <p>This website was created for learning purposes by <OutboundLink target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</OutboundLink>. Show your support on <OutboundLink target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</OutboundLink>.</p>
           <p>Contact <a target="_blank" rel="noopener noreferrer" href="mailto:dev@trackingcovid.info?Subject=Covid%20Tracker">dev@trackingcovid.info</a> for any suggestions, bugs or issues.</p>
           <h2>Sources</h2>
           <p>Global Data provided by <a target="_blank" rel="noopener noreferrer" href="https://systems.jhu.edu/">JHU CSSE</a> on <a target="_blank" rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19">Github</a></p>
           <p>Montreal data provided by <a target="_blank" rel="noopener noreferrer" href="https://santemontreal.qc.ca/en/public/coronavirus-covid-19/">Santé Montréal</a></p>
           <p>Icon provided by <a target="_blank" rel="noopener noreferrer" href="https://www.iconfinder.com/justicon">Just Icon</a> licensed under <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+          <p>Design inspired by <a target="_blank" rel="noopener noreferrer" href="https://covid19.nguy.dev">Andy Nguy</a></p>
+          <h2>Technologies Used</h2>
+          <p><a target="_blank" rel="noopener noreferrer" href="https://reactjs.org/">React</a> for the frontend</p>
+          <p><a target="_blank" rel="noopener noreferrer" href="https://react-leaflet.js.org/">React-Leaflet</a> and <a target="_blank" rel="noopener noreferrer" href="https://leafletjs.com/">Leaflet.js</a> for the maps</p>
+          <p><a target="_blank" rel="noopener noreferrer" href="https://elastic.github.io/eui/#/">Elastic UI</a> as the UI framework</p>
+          <p><a target="_blank" rel="noopener noreferrer" href="https://elastic.github.io/elastic-charts/?path=/story/*">Elastic Charts</a> for the charts</p>
         </EuiText>
       </EuiPanel>
     </Layout>
