@@ -50,7 +50,7 @@ const getConfirmedRowData = (entries: any) => {
 }
 
 const getConfirmedData = async () => {
-  const confirmedData = await getSheetsData("quebecConfirmed", 1, getConfirmedRowData);
+  const confirmedData = await getSheetsData("quebecConfirmed", 2, getConfirmedRowData);
   return confirmedData;
 }
 
@@ -78,7 +78,7 @@ const getDeathsRowData = (entries: any) => {
 }
 
 const getDeathsData = async () => {
-  const deathsData = await getSheetsData("quebecDeaths", 2, getDeathsRowData);
+  const deathsData = await getSheetsData("quebecDeaths", 3, getDeathsRowData);
   return deathsData;
 }
 
@@ -102,7 +102,7 @@ const getHospitalizationRowData = (entries: any) => {
 }
 
 const getHospitalizationData = async () => {
-  const hospitalizationData = await getSheetsData("quebecHospitalization", 3, getHospitalizationRowData);
+  const hospitalizationData = await getSheetsData("quebecHospitalization", 4, getHospitalizationRowData);
   return hospitalizationData;
 }
 
@@ -125,7 +125,7 @@ const getAnalysisRowData = (entries: any) => {
 }
 
 const getAnalysisData = async () => {
-  const analysisData = await getSheetsData("quebecAnalysis", 4, getAnalysisRowData);
+  const analysisData = await getSheetsData("quebecAnalysis", 5, getAnalysisRowData);
   return analysisData;
 }
 
@@ -152,7 +152,7 @@ const getCasesPerRegionRowData = (entries: any) => {
 }
 
 const getCasesPerRegionData = async () => {
-  const regionData = await getSheetsData("quebecCasesPerRegion", 5, getCasesPerRegionRowData);
+  const regionData = await getSheetsData("quebecCasesPerRegion", 6, getCasesPerRegionRowData);
   return regionData;
 }
 
@@ -173,7 +173,7 @@ const getCasesByAgeRowData = (entries: any) => {
 }
 
 const getCasesByAgeData = async () => {
-  const casesByAgeData = await getSheetsData("quebecCasesByAge", 7, getCasesByAgeRowData);
+  const casesByAgeData = await getSheetsData("quebecCasesByAge", 8, getCasesByAgeRowData);
   return casesByAgeData;
 }
 
@@ -194,7 +194,7 @@ const getDeathsByAgeRowData = (entries: any) => {
 }
 
 const getDeathsByAgeData = async () => {
-  const deathsByAgeData = await getSheetsData("quebecDeathsByAge", 8, getDeathsByAgeRowData);
+  const deathsByAgeData = await getSheetsData("quebecDeathsByAge", 9, getDeathsByAgeRowData);
   return deathsByAgeData;
 }
 

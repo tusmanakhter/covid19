@@ -18,7 +18,7 @@ const getMontrealData = async () => {
     const distributionString = html(element).find('td:nth-of-type(3)').text();
     const distribution = parseFloat(distributionString.replace(/\s/g, '0'));
     const perHundredString = html(element).find('td:nth-of-type(4)').text();
-    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*\s/g, '0'));
+    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*/g, '0'));
     return { location, confirmed, distribution, perHundred }
   }).get();
   const total = neighbourhoodData.pop();
@@ -51,7 +51,7 @@ const getMontrealAgeData = async () => {
     const distributionString = html(element).find('td:nth-of-type(3)').text();
     const distribution = parseFloat(distributionString.replace(/\s/g, '0'));
     const perHundredString = html(element).find('td:nth-of-type(4)').text();
-    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*\s/g, '0'));
+    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*/g, '0'));
     return { ageGroup, confirmed, distribution, perHundred }
   }).get();
   ageData.pop();
