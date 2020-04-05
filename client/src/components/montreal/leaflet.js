@@ -4,7 +4,7 @@ import { Map, TileLayer, GeoJSON } from 'react-leaflet'
 import Control from 'react-leaflet-control';
 import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel } from '@elastic/eui';
 import { useMediaQuery } from 'react-responsive'
-import ky from 'ky';
+import montrealGeoJson from '../../geojson/montreal.json';
 import getKey from '../../helpers/key';
 import '../global/leaflet.css';
 import './leaflet.css';
@@ -45,17 +45,9 @@ const getBottomPanel = () => {
 }
 
 const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
-  const [geoJSON, setGeoJson] = useState();
   const [hovered, setHovered] = useState(null);
   const geoJson = useRef();
   const leafletMap = useRef();
-
-  useEffect(() => {
-    (async () => {
-      const geoJsonData = await ky.get(`${process.env.API_URL}/api/montreal/geojson`).json();
-      setGeoJson(geoJsonData);
-    })();
-  }, []);
 
   const getStyle = useCallback(
     (feature) => {
@@ -148,14 +140,12 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
-            {(geoJSON) && 
-              <GeoJSON
-                ref={geoJson}
-                data={geoJSON} 
-                style={getStyle}
-                onEachFeature={onEachFeature}
-              />
-            }
+            <GeoJSON
+              ref={geoJson}
+              data={montrealGeoJson}
+              style={getStyle}
+              onEachFeature={onEachFeature}
+            />
             <Control position="topright" >
               <EuiPanel>
                 <EuiText className="info" size="s">
