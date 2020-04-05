@@ -26,13 +26,42 @@ const getSheetsData = async (cacheKey: string, sheetPage: number, getRowData: Fu
   return data;
 }
 
+const getSummaryRowData = (entries: any) => {
+  const entry = entries[0];
+
+  const cases = normalizeInteger(entry.gsx$cas.$t);
+  const deaths = normalizeInteger(entry.gsx$deces.$t);
+  const hospitalizations = normalizeInteger(entry.gsx$hospit.$t);
+  const intensive = normalizeInteger(entry.gsx$soins.$t);
+  const recovered = normalizeInteger(entry.gsx$gueris.$t);
+  const investigation = normalizeInteger(entry.gsx$invest.$t);
+  const date = entry.gsx$date.$t;
+
+  const summary = {
+    cases,
+    deaths,
+    hospitalizations,
+    intensive,
+    recovered,
+    investigation,
+    date
+  }
+
+  return summary;
+}
+
+const getSummaryData = async () => {
+  const summaryData = await getSheetsData("quebecSummary", 1, getSummaryRowData);
+  return summaryData;
+}
+
 const getConfirmedRowData = (entries: any) => {
   const history: any = [];
   
   entries.forEach((entry: any) => {
     const date = entry.gsx$date.$t;
-    const confirmed = parseInt(entry.gsx$nombrecumulatifdecas.$t, 10);
-    let daily = parseInt(entry.gsx$nouveauxcas.$t, 10);
+    const confirmed = normalizeInteger(entry.gsx$nombrecumulatifdecas.$t);
+    let daily = normalizeInteger(entry.gsx$nouveauxcas.$t);
 
     // Handle first row
     if (isNaN(daily)){
@@ -59,8 +88,8 @@ const getDeathsRowData = (entries: any) => {
 
   entries.forEach((entry: any) => {
     const date = entry.gsx$date.$t;
-    const deaths = parseInt(entry.gsx$nombrecumulatifdedécès.$t, 10);
-    let daily = parseInt(entry.gsx$nouveauxdécès.$t, 10);
+    const deaths = normalizeInteger(entry.gsx$nombrecumulatifdedécès.$t);
+    let daily = normalizeInteger(entry.gsx$nouveauxdécès.$t);
 
     // Handle first row
     if (isNaN(daily)){
@@ -88,8 +117,8 @@ const getHospitalizationRowData = (entries: any) => {
 
   entries.forEach((entry: any) => {
     const date = entry.gsx$date.$t;
-    const hospitalizations = parseInt(entry.gsx$hospitalisations.$t, 10);
-    const intensive = parseInt(entry.gsx$soinsintensifs.$t, 10);
+    const hospitalizations = normalizeInteger(entry.gsx$hospitalisations.$t);
+    const intensive = normalizeInteger(entry.gsx$soinsintensifs.$t);
 
     history.push({
       date,
@@ -111,8 +140,8 @@ const getAnalysisRowData = (entries: any) => {
 
   entries.forEach((entry: any) => {
     const date = entry.gsx$date.$t;
-    const negative = parseInt(entry.gsx$cumuldepersonnesavecanalysesnégatives.$t, 10);
-    const positive = parseInt(entry.gsx$cumuldecasconfirmés.$t, 10);
+    const negative = normalizeInteger(entry.gsx$cumuldepersonnesavecanalysesnégatives.$t);
+    const positive = normalizeInteger(entry.gsx$cumuldecasconfirmés.$t);
 
     history.push({
       date,
@@ -134,9 +163,9 @@ const getCasesPerRegionRowData = (entries: any) => {
 
   entries.forEach((entry: any) => {
     const region = entry.gsx$state.$t;
-    const cases = parseInt(entry.gsx$cas.$t, 10);
-    const population = parseInt(entry.gsx$population.$t, 10);
-    const perHundred = parseFloat(entry.gsx$taux.$t);
+    const cases = normalizeInteger(entry.gsx$cas.$t);
+    const population = normalizeInteger(entry.gsx$population.$t);
+    const perHundred = normalizeFloat(entry.gsx$taux.$t);
 
     regions.push({
       region,
@@ -161,7 +190,7 @@ const getCasesByAgeRowData = (entries: any) => {
 
   entries.forEach((entry: any) => {
     const ageGroup = entry.gsx$groupedâge.$t.replace(/ans/, 'years').replace(/et plus/, 'and above');
-    const cases = parseInt(entry.gsx$proportiondecasconfirmés.$t, 10);
+    const cases = normalizeInteger(entry.gsx$proportiondecasconfirmés.$t);
 
     data.push({
       ageGroup,
@@ -173,7 +202,7 @@ const getCasesByAgeRowData = (entries: any) => {
 }
 
 const getCasesByAgeData = async () => {
-  const casesByAgeData = await getSheetsData("quebecCasesByAge", 8, getCasesByAgeRowData);
+  const casesByAgeData = await getSheetsData("quebecCasesByAge", 7, getCasesByAgeRowData);
   return casesByAgeData;
 }
 
@@ -182,7 +211,7 @@ const getDeathsByAgeRowData = (entries: any) => {
 
   entries.forEach((entry: any) => {
     const ageGroup = entry.gsx$groupedâge.$t.replace(/ans/, 'years').replace(/et plus/, 'and above');
-    const deaths = parseInt(entry.gsx$nombrededécès.$t, 10);
+    const deaths = normalizeInteger(entry.gsx$nombrededécès.$t);
 
     data.push({
       ageGroup,
@@ -194,12 +223,13 @@ const getDeathsByAgeRowData = (entries: any) => {
 }
 
 const getDeathsByAgeData = async () => {
-  const deathsByAgeData = await getSheetsData("quebecDeathsByAge", 9, getDeathsByAgeRowData);
+  const deathsByAgeData = await getSheetsData("quebecDeathsByAge", 8, getDeathsByAgeRowData);
   return deathsByAgeData;
 }
 
 const getQuebecData = async () => {
-  const [confirmed, deaths, hospitalizations, analysis, casesPerRegion, casesByAge, deathsByAge]: any = await Promise.all([
+  const [summary, confirmed, deaths, hospitalizations, analysis, casesPerRegion, casesByAge, deathsByAge]: any = await Promise.all([
+    getSummaryData(),
     getConfirmedData(),
     getDeathsData(),
     getHospitalizationData(),
@@ -217,6 +247,7 @@ const getQuebecData = async () => {
   }
 
   return {
+    summary,
     confirmed,
     deaths,
     hospitalizations,
@@ -224,6 +255,14 @@ const getQuebecData = async () => {
     casesPerRegion,
     byAge,
   }
+}
+
+const normalizeInteger = (integer: string) => {
+  return parseInt(integer.replace(/\s/g,''), 10);
+}
+
+const normalizeFloat = (float: string) => {
+  return parseFloat(float.replace(/\s/g,''));
 }
 
 export { getQuebecData, getConfirmedData };
