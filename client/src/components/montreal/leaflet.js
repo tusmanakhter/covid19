@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Map, TileLayer, GeoJSON } from 'react-leaflet'
 import Control from 'react-leaflet-control';
-import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel } from '@elastic/eui';
+import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel, EuiRadioGroup } from '@elastic/eui';
 import { useMediaQuery } from 'react-responsive'
 import montrealGeoJson from '../../geojson/montreal.json';
 import getKey from '../../helpers/key';
@@ -44,15 +44,27 @@ const getBottomPanel = () => {
   return gradesMap;
 }
 
+const radios = [
+  {
+    id: 'confirmed',
+    label: 'Confirmed',
+  },
+  {
+    id: 'perHundred',
+    label: 'Per Capita',
+  },
+];
+
 const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
   const [hovered, setHovered] = useState(null);
+  const [choroplethGradeType, setChoroplethGradeType] = useState('confirmed');
   const geoJson = useRef();
   const leafletMap = useRef();
 
   const getStyle = useCallback(
     (feature) => {
       const key = getKey(feature.properties.district);
-      const amount = data[key].confirmed;
+      const amount = data[key][choroplethGradeType];
   
       return {
         fillColor: getColor(amount),
@@ -63,7 +75,7 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
         fillOpacity: 0.7
       };
     },
-    [data],
+    [data, choroplethGradeType],
   );
 
   const highlightFeature = (e) => {
@@ -168,6 +180,19 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
             <Control position="bottomright" className="legend" >
               <EuiPanel>
                 {getBottomPanel()}
+              </EuiPanel>
+            </Control>
+            <Control position="bottomleft" >
+              <EuiPanel>
+                <EuiRadioGroup
+                  options={radios}
+                  idSelected={choroplethGradeType}
+                  onChange={(option) => setChoroplethGradeType(option)}
+                  name="Show"
+                  legend={{
+                    children: <span>Show</span>,
+                  }}
+                />
               </EuiPanel>
             </Control>
           </Map>        
