@@ -1,6 +1,6 @@
-import { getQuebecCases, getCanadaCases } from "./jhu-esri";
+import { getQuebecCases } from "./jhu-esri";
+import { getCanadaCases } from "../helpers/cases";
 import  { getMontrealData, getMontrealAgeData } from "../services/sante-montreal";
-import  { getHistoryData } from "../services/canada";
 import  { getConfirmedData } from "../services/quebec";
 import cache from "../helpers/cache";
 
@@ -26,24 +26,7 @@ const getData = async () => {
       cache.set("quebecCases", quebecCases, 60);
     }
 
-    let canadaCases = cache.get("canadaCases");
-    if ( canadaCases === undefined ) {
-      const canadaCasesJHU = await getCanadaCases();
-      const canadaCAData: any = await getHistoryData();
-      const canadaCasesCA = canadaCAData['Canada'].pop().confirmed;
-
-      if (canadaCasesJHU !== undefined && canadaCasesCA !== undefined) {
-        canadaCases = Math.max(canadaCasesCA, canadaCasesJHU);
-      } else if (canadaCasesJHU === undefined) {
-        canadaCases = canadaCasesCA;
-      } else if (canadaCasesCA === undefined) {
-        canadaCases = canadaCasesJHU;
-      } else {
-        canadaCases = 0;
-      }
-
-      cache.set("canadaCases", canadaCases, 60);
-    }
+    const canadaCases = await getCanadaCases();
 
     let montrealRegionData: any = cache.get("montrealRegionData");
     if ( montrealRegionData === undefined ) {

@@ -1,6 +1,10 @@
 
 import got from 'got';
 import cache from "../helpers/cache";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat"
+import { getCanadaCases } from "../helpers/cases";
+dayjs.extend(customParseFormat);
 
 const baseUrl = 'https://spreadsheets.google.com/feeds/list/1kmCbHvJFHe70GZNqOTP-sHjYDvJ_pa7zn2-gJhCNP3g/';
 const urlEnd = '/public/values?alt=json';
@@ -35,7 +39,7 @@ const getSummaryRowData = (entries: any) => {
   const intensive = normalizeInteger(entry.gsx$soins.$t);
   const recovered = normalizeInteger(entry.gsx$gueris.$t);
   const investigation = normalizeInteger(entry.gsx$invest.$t);
-  const date = entry.gsx$date.$t;
+  const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
 
   const summary = {
     cases,
@@ -59,7 +63,7 @@ const getConfirmedRowData = (entries: any) => {
   const history: any = [];
   
   entries.forEach((entry: any) => {
-    const date = entry.gsx$date.$t;
+    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
     const confirmed = normalizeInteger(entry.gsx$nombrecumulatifdecas.$t);
     let daily = normalizeInteger(entry.gsx$nouveauxcas.$t);
 
@@ -87,7 +91,7 @@ const getDeathsRowData = (entries: any) => {
   const history: any = [];
 
   entries.forEach((entry: any) => {
-    const date = entry.gsx$date.$t;
+    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
     const deaths = normalizeInteger(entry.gsx$nombrecumulatifdedécès.$t);
     let daily = normalizeInteger(entry.gsx$nouveauxdécès.$t);
 
@@ -116,7 +120,7 @@ const getHospitalizationRowData = (entries: any) => {
   const history: any = [];
 
   entries.forEach((entry: any) => {
-    const date = entry.gsx$date.$t;
+    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
     const hospitalizations = normalizeInteger(entry.gsx$hospitalisations.$t);
     const intensive = normalizeInteger(entry.gsx$soinsintensifs.$t);
 
@@ -139,7 +143,7 @@ const getAnalysisRowData = (entries: any) => {
   const history: any = [];
 
   entries.forEach((entry: any) => {
-    const date = entry.gsx$date.$t;
+    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
     const negative = normalizeInteger(entry.gsx$cumuldepersonnesavecanalysesnégatives.$t);
     const positive = normalizeInteger(entry.gsx$cumuldecasconfirmés.$t);
 
@@ -245,6 +249,13 @@ const getQuebecData = async () => {
     lastUpdate: casesByAge.lastUpdate,
     data: ageData,
   }
+  
+  const lastAnalysis = analysis.data.splice(-1).pop();
+  const canadaCases = await getCanadaCases();
+
+  summary.data.negative = lastAnalysis.negative;
+  summary.data.totalTests = lastAnalysis.negative + lastAnalysis.positive;
+  summary.data.percentCanada = parseFloat(((summary.data.cases/canadaCases)*100).toFixed(2));
 
   return {
     summary,
