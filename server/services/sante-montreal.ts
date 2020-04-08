@@ -16,15 +16,15 @@ const getMontrealData = async () => {
     const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
     const confirmed = parseInt(confirmedString.replace(/,|</g, ''), 10);
     const distributionString = html(element).find('td:nth-of-type(3)').text();
-    const distribution = parseFloat(distributionString.replace(/\s/g, '0'));
+    const distribution = parseFloat(distributionString.replace(/\s|-/g, '0'));
     const perHundredString = html(element).find('td:nth-of-type(4)').text();
-    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*/g, '0'));
+    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*|-/g, '0'));
     return { location, confirmed, distribution, perHundred }
   }).get();
   const total = neighbourhoodData.pop();
   neighbourhoodData.sort((a, b) => b.confirmed - a.confirmed);
 
-  const timeRegex = /.*extracted\son\s(\w+)\s(\d+)(?:\w\w)*\s(\d+:\d+)\s(\w\w).*/i;
+  const timeRegex = /.*extracted\son\s(\w+)\s(\d+).*(\d+)(\:\d+)*.*\s(\w\.*\w).*/i;
   const time = table.next().text().trim().replace(timeRegex, '$1 $2 2020 $3 $4 EDT').toUpperCase();
   const lastUpdate = dayjs(time);
 
@@ -49,9 +49,9 @@ const getMontrealAgeData = async () => {
     const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
     const confirmed = parseInt(confirmedString.replace(/,|</g, ''), 10);
     const distributionString = html(element).find('td:nth-of-type(3)').text();
-    const distribution = parseFloat(distributionString.replace(/\s/g, '0'));
+    const distribution = parseFloat(distributionString.replace(/\s|-/g, '0'));
     const perHundredString = html(element).find('td:nth-of-type(4)').text();
-    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*/g, '0'));
+    const perHundred = parseFloat(perHundredString.replace(/\s|n\.p\.|\*|-/g, '0'));
     return { ageGroup, confirmed, distribution, perHundred }
   }).get();
   ageData.pop();
