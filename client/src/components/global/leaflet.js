@@ -8,10 +8,10 @@ import './leaflet.css';
 const stat = (title, stat, color) => (
   <EuiFlexGroup responsive={false} gutterSize="none">
     <EuiFlexItem style={{marginRight: 16}}>
-      <EuiText><small><b>{title}: </b></small></EuiText>
+      <EuiText size="xs"><b>{title}: </b></EuiText>
     </EuiFlexItem>
     <EuiFlexItem grow={false}>
-      <EuiText className="map-popup" color={color}><small><b>{stat.toLocaleString()}</b></small></EuiText>
+      <EuiText className="map-popup" color={color} size="xs"><b>{stat.toLocaleString()}</b></EuiText>
     </EuiFlexItem>
   </EuiFlexGroup>
 )
@@ -104,17 +104,18 @@ const Leaflet = ({ data, selectedData }) => {
           <Popup autoClose>
             {location.location.province ? 
               <>
-              <EuiText>
+              <EuiText size="s">
                 <dl>
                   <dt>{location.location.province}</dt>
                   <dd style={{fontSize: "0.9rem"}}>{location.location.country}</dd>
                 </dl>
               </EuiText>
               </> :
-              <EuiText><dl><dt>{location.location.country}</dt></dl></EuiText>
+              <EuiText size="s"><dl><dt>{location.location.country}</dt></dl></EuiText>
             }
             <EuiHorizontalRule margin="xs" />
             {stat('Confirmed', location.latest.confirmed, 'default')}
+            {stat('Active', location.latest.active, 'accent')}
             {stat('Recovered', location.latest.recovered, 'secondary')}
             {stat('Deaths', location.latest.deaths, 'danger')}
           </Popup>

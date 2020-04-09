@@ -626,3 +626,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .map-popup .euiTextColor--default {
 	color: #006BB4
 }
+
+.map-popup .euiTextColor--accent {
+	color: #F5A700
+}
