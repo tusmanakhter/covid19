@@ -1,9 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import BackButton from './back-button';
-import { EuiStat, EuiFlexItem, EuiFlexGroup, EuiTitle, EuiText, EuiIcon, EuiHorizontalRule, EuiLoadingContent } from '@elastic/eui';
+import { EuiStat, EuiFlexItem, EuiFlexGroup, EuiTitle, EuiText, EuiHorizontalRule, EuiLoadingContent, EuiBadge } from '@elastic/eui';
+import StatLine from './stat-line';
+import './stats.css';
 
-const getIncrease = (stat, data) => {
+const getIncrease = (stat, data, color) => {
   const latest = data.latest[stat];
   const previous = data.history.slice(-1).pop()[stat];
   let increase = latest - previous;
@@ -19,7 +21,7 @@ const getIncrease = (stat, data) => {
 
   return (
     <EuiText textAlign="center" size="xs">
-      (<EuiIcon type="sortUp" />{increase.toLocaleString()} / {percentage}%)
+      <EuiBadge color={color}>{increase > 0 && "+"}{increase.toLocaleString()} ({percentage}%)</EuiBadge>
     </EuiText>
   )
 }
@@ -32,7 +34,10 @@ const getPercentTotal = (stat, data) => {
     label = 'Recovery Rate:';
   } else if (stat === 'deaths') {
     label = 'Death Rate:'
+  } else if (stat === 'active') {
+    label = "Active Percent:"
   }
+
   let percentage = ((latest/confirmed)*100).toFixed(2);
 
   if (!isFinite(percentage)) {
@@ -42,17 +47,6 @@ const getPercentTotal = (stat, data) => {
   return (
     <EuiText textAlign="center" size="xs">
       <b>{label}</b> {percentage}%
-    </EuiText>
-  )
-}
-
-const getActiveCases = (data) => {
-  const label = 'Active Cases:';
-  const active = data.latest.active;
-
-  return (
-    <EuiText textAlign="center" size="xs">
-      <b>{label}</b> {active.toLocaleString()}
     </EuiText>
   )
 }
@@ -70,22 +64,31 @@ const Stats = ({ title, data, onBack }) => {
               </EuiFlexItem>
             </EuiFlexGroup>
           </EuiFlexItem>
-          <EuiHorizontalRule margin="none" />
+          <StatLine 
+              confirmed={data.latest.confirmed}
+              recovered={data.latest.recovered}
+              deaths={data.latest.deaths}
+              active={data.latest.active}
+          />
+          <EuiFlexItem>
+            <EuiStat title={data.latest.confirmed.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="primary" />
+            {getIncrease('confirmed', data, "#B2D2E8")}
+          </EuiFlexItem>
           <EuiFlexItem>
             <EuiFlexGroup>
               <EuiFlexItem>
-                <EuiStat title={data.latest.confirmed.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="primary" />
-                {getIncrease('confirmed', data)}
-                {getActiveCases(data)}
+                <EuiStat className="active" title={data.latest.active.toLocaleString()} description="Active" titleSize="s" textAlign="center" titleColor="accent" />
+                {getIncrease('active', data, "#FCE4B2")}
+                {getPercentTotal('active', data)}
               </EuiFlexItem>
               <EuiFlexItem>
-                <EuiStat title={data.latest.recovered.toLocaleString()} description="Recovered" titleSize="m" textAlign="center" titleColor="secondary" />
-                {getIncrease('recovered', data)}
+                <EuiStat title={data.latest.recovered.toLocaleString()} description="Recovered" titleSize="s" textAlign="center" titleColor="secondary" />
+                {getIncrease('recovered', data, "#B2D8D5")}
                 {getPercentTotal('recovered', data)}
               </EuiFlexItem>
               <EuiFlexItem>
-                <EuiStat title={data.latest.deaths.toLocaleString()} description="Deaths" titleSize="m"  textAlign="center" titleColor="danger" />
-                {getIncrease('deaths', data)}
+                <EuiStat title={data.latest.deaths.toLocaleString()} description="Deaths" titleSize="s"  textAlign="center" titleColor="danger" />
+                {getIncrease('deaths', data, "#EBBEBB")}
                 {getPercentTotal('deaths', data)}
               </EuiFlexItem>
             </EuiFlexGroup>

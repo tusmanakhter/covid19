@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Map, CircleMarker, Popup, TileLayer } from 'react-leaflet'
-import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingChart, EuiPanel, EuiRadioGroup } from '@elastic/eui';
+import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingChart, EuiPanel, EuiSpacer, EuiSuperSelect, EuiHealth } from '@elastic/eui';
 import Control from 'react-leaflet-control';
 import './leaflet.css';
 
@@ -31,28 +31,44 @@ const getColor = (type) => {
   }
 }
 
-const radios = [
+const options = [
   {
-    id: 'confirmed',
-    label: 'Confirmed',
+    value: 'confirmed',
+    inputDisplay: (
+      <EuiHealth color={getColor('confirmed')} style={{ lineHeight: 'inherit' }}>
+        Confirmed
+      </EuiHealth>
+    ),
   },
   {
-    id: 'recovered',
-    label: 'Recovered',
+    value: 'recovered',
+    inputDisplay: (
+      <EuiHealth color={getColor('recovered')} style={{ lineHeight: 'inherit' }}>
+        Recovered
+      </EuiHealth>
+    ),
   },
   {
-    id: 'deaths',
-    label: 'Deaths',
+    value: 'deaths',
+    inputDisplay: (
+      <EuiHealth color={getColor('deaths')} style={{ lineHeight: 'inherit' }}>
+        Deaths
+      </EuiHealth>
+    ),
   },
   {
-    id: 'active',
-    label: 'Active',
+    value: 'active',
+    inputDisplay: (
+      <EuiHealth color={getColor('active')} style={{ lineHeight: 'inherit' }}>
+        Active
+      </EuiHealth>
+    ),
   },
 ];
 
 const Leaflet = ({ data, selectedData }) => {
   const [zoom, setZoom] = useState(2);
-  const [position, setPosition] = useState([35,6]);
+  const [position, setPosition] = useState([25, 10]);
   const [markerType, setMarkerType] = useState('confirmed');
   
   useEffect(() => {
@@ -122,18 +138,14 @@ const Leaflet = ({ data, selectedData }) => {
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
-            <Control position="bottomleft" >
-              <EuiPanel>
-                <EuiRadioGroup
-                  options={radios}
-                  idSelected={markerType}
-                  onChange={(option) => setMarkerType(option)}
-                  name="Marker type"
-                  legend={{
-                    children: <span>Marker Scale</span>,
-                  }}
-                />
-              </EuiPanel>
+            <Control position="topright" >
+              <EuiSuperSelect
+                style={{minWidth: 140}}
+                options={options}
+                valueOfSelected={markerType}
+                onChange={(option) => setMarkerType(option)}
+                compressed
+              />
             </Control>
             {markers}
           </Map>

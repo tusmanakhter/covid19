@@ -50,8 +50,8 @@ const getAll = async () => {
           location: {
             country: "Global",
             province: "",
-            lat: 35,
-            long: 6,
+            lat: 25,
+            long: 10,
           },
         }
         finalData.global = global;

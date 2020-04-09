@@ -50,7 +50,7 @@ const Chart = ({ title, data }) => {
         history ? (
           <EuiFlexGroup direction="column">
             <EuiFlexItem grow={false}>
-              <EuiFlexGroup alignItems="center">
+              <EuiFlexGroup alignItems="center" responsive={false}>
                 <EuiFlexItem>
                   <EuiTitle size="s"><h2>{title}</h2></EuiTitle>
                 </EuiFlexItem>

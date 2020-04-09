@@ -70,7 +70,7 @@ const Table = ({ data, onRowClick, isProvince }) => {
         }}
         pagination={{
           pageSizeOptions: [10, 15],
-          initialPageSize: 15,
+          initialPageSize: 10,
         }}
         sorting={true}
         rowProps={getRowProps}

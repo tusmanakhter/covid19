@@ -112,6 +112,7 @@ const App = () => {
                     <Chart title={selected} data={selectedData} />
                   </EuiPanel>
                 </EuiFlexItem>
+                <EuiFlexItem />
               </EuiFlexGroup>
             </EuiFlexItem>
           </EuiFlexGroup>
