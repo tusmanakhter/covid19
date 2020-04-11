@@ -2,6 +2,7 @@
 import got from 'got';
 import cache from "../helpers/cache";
 import dayjs from "dayjs";
+import parse from "csv-parse/lib/sync";
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import { getCanadaCases } from "../helpers/cases";
 dayjs.extend(customParseFormat);
@@ -30,16 +31,41 @@ const getSheetsData = async (cacheKey: string, sheetPage: number, getRowData: Fu
   return data;
 }
 
+const getCsvData = async (cacheKey: string, page: string, getRowData: Function) => {
+  let data = cache.get(cacheKey);
+
+  if ( data === undefined ) {
+    const date = new Date();
+    const time = date.getTime();
+    
+    const url = `https://www.inspq.qc.ca/sites/default/files/covid/donnees/${page}.csv?randNum=${time}`;
+    const response: any = await got(url).text();
+    const records = parse(response, {
+      columns: true,
+      skip_empty_lines: true
+    })
+    const rowData = getRowData(records)
+
+    data = {
+      data: rowData,
+    }
+
+    cache.set(cacheKey, data, 600);
+  }
+
+  return data;
+}
+
 const getSummaryRowData = (entries: any) => {
   const entry = entries[0];
 
-  const cases = normalizeInteger(entry.gsx$cas.$t);
-  const deaths = normalizeInteger(entry.gsx$deces.$t);
-  const hospitalizations = normalizeInteger(entry.gsx$hospit.$t);
-  const intensive = normalizeInteger(entry.gsx$soins.$t);
-  const recovered = normalizeInteger(entry.gsx$gueris.$t);
-  const investigation = normalizeInteger(entry.gsx$invest.$t);
-  const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
+  const cases = normalizeInteger(entry.cas);
+  const deaths = normalizeInteger(entry.deces);
+  const hospitalizations = normalizeInteger(entry.hospit);
+  const intensive = normalizeInteger(entry.soins);
+  const recovered = normalizeInteger(entry.gueris);
+  const investigation = normalizeInteger(entry.invest);
+  const date = dayjs(entry.date, "DD/MM/YYYY").format("MM/DD/YYYY");
 
   const summary = {
     cases,
@@ -55,17 +81,17 @@ const getSummaryRowData = (entries: any) => {
 }
 
 const getSummaryData = async () => {
-  const summaryData = await getSheetsData("quebecSummary", 1, getSummaryRowData);
+  const summaryData = await getCsvData("quebecSummary", 'tuiles', getSummaryRowData);
   return summaryData;
 }
 
 const getConfirmedRowData = (entries: any) => {
   const history: any = [];
-  
+
   entries.forEach((entry: any) => {
-    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
-    const confirmed = normalizeInteger(entry.gsx$nombrecumulatifdecas.$t);
-    let daily = normalizeInteger(entry.gsx$nouveauxcas.$t);
+    const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
+    const confirmed = normalizeInteger(entry['Nombre cumulatif de cas']);
+    let daily = normalizeInteger(entry['Nouveaux cas']);
 
     // Handle first row
     if (isNaN(daily)){
@@ -83,7 +109,7 @@ const getConfirmedRowData = (entries: any) => {
 }
 
 const getConfirmedData = async () => {
-  const confirmedData = await getSheetsData("quebecConfirmed", 2, getConfirmedRowData);
+  const confirmedData = await getCsvData("quebecConfirmed", 'graph1', getConfirmedRowData);
   return confirmedData;
 }
 
@@ -91,9 +117,9 @@ const getDeathsRowData = (entries: any) => {
   const history: any = [];
 
   entries.forEach((entry: any) => {
-    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
-    const deaths = normalizeInteger(entry.gsx$nombrecumulatifdedécès.$t);
-    let daily = normalizeInteger(entry.gsx$nouveauxdécès.$t);
+    const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
+    const deaths = normalizeInteger(entry['Nombre cumulatif de décès']);
+    let daily = normalizeInteger(entry['Nouveaux décès']);
 
     // Handle first row
     if (isNaN(daily)){
@@ -111,7 +137,7 @@ const getDeathsRowData = (entries: any) => {
 }
 
 const getDeathsData = async () => {
-  const deathsData = await getSheetsData("quebecDeaths", 3, getDeathsRowData);
+  const deathsData = await getCsvData("quebecDeaths", 'graph2', getDeathsRowData);
   return deathsData;
 }
 
@@ -120,9 +146,9 @@ const getHospitalizationRowData = (entries: any) => {
   const history: any = [];
 
   entries.forEach((entry: any) => {
-    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
-    const hospitalizations = normalizeInteger(entry.gsx$hospitalisations.$t);
-    const intensive = normalizeInteger(entry.gsx$soinsintensifs.$t);
+    const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
+    const hospitalizations = normalizeInteger(entry['Hospitalisations']);
+    const intensive = normalizeInteger(entry['Soins intensifs']);
 
     history.push({
       date,
@@ -135,7 +161,7 @@ const getHospitalizationRowData = (entries: any) => {
 }
 
 const getHospitalizationData = async () => {
-  const hospitalizationData = await getSheetsData("quebecHospitalization", 4, getHospitalizationRowData);
+  const hospitalizationData = await getCsvData("quebecHospitalization", 'graph3', getHospitalizationRowData);
   return hospitalizationData;
 }
 
@@ -143,9 +169,9 @@ const getAnalysisRowData = (entries: any) => {
   const history: any = [];
 
   entries.forEach((entry: any) => {
-    const date = dayjs(entry.gsx$date.$t, "DD/MM/YYYY").format("MM/DD/YYYY");
-    const negative = normalizeInteger(entry.gsx$cumuldepersonnesavecanalysesnégatives.$t);
-    const positive = normalizeInteger(entry.gsx$cumuldecasconfirmés.$t);
+    const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
+    const negative = normalizeInteger(entry['Cumul des personnes avec des analyses négatives']);
+    const positive = normalizeInteger(entry['Cumul de cas confirmés']);
 
     history.push({
       date,
@@ -158,7 +184,7 @@ const getAnalysisRowData = (entries: any) => {
 }
 
 const getAnalysisData = async () => {
-  const analysisData = await getSheetsData("quebecAnalysis", 5, getAnalysisRowData);
+  const analysisData = await getCsvData("quebecAnalysis", 'graph4', getAnalysisRowData);
   return analysisData;
 }
 
@@ -166,10 +192,10 @@ const getCasesPerRegionRowData = (entries: any) => {
   const regions: any = [];
 
   entries.forEach((entry: any) => {
-    const region = entry.gsx$state.$t;
-    const cases = normalizeInteger(entry.gsx$cas.$t);
-    const population = normalizeInteger(entry.gsx$population.$t);
-    const perHundred = normalizeFloat(entry.gsx$taux.$t);
+    const region = entry['State'];
+    const cases = normalizeInteger(entry['Cas']);
+    const population = normalizeInteger(entry['Population']);
+    const perHundred = normalizeFloat(entry['Taux']);
 
     regions.push({
       region,
@@ -185,7 +211,7 @@ const getCasesPerRegionRowData = (entries: any) => {
 }
 
 const getCasesPerRegionData = async () => {
-  const regionData = await getSheetsData("quebecCasesPerRegion", 6, getCasesPerRegionRowData);
+  const regionData = await getCsvData("quebecCasesPerRegion", 'graph5', getCasesPerRegionRowData);
   return regionData;
 }
 
@@ -193,8 +219,8 @@ const getCasesByAgeRowData = (entries: any) => {
   const data: any = [];
 
   entries.forEach((entry: any) => {
-    const ageGroup = entry.gsx$groupedâge.$t.replace(/ans/, 'years').replace(/et plus/, 'and above');
-    const cases = normalizeInteger(entry.gsx$proportiondecasconfirmés.$t);
+    const ageGroup = entry['Groupe d\'âge'].replace(/ans/, 'years').replace(/et plus/, 'and above');
+    const cases = normalizeInteger(entry['Proportion de cas confirmés']);
 
     data.push({
       ageGroup,
@@ -206,7 +232,7 @@ const getCasesByAgeRowData = (entries: any) => {
 }
 
 const getCasesByAgeData = async () => {
-  const casesByAgeData = await getSheetsData("quebecCasesByAge", 7, getCasesByAgeRowData);
+  const casesByAgeData = await getCsvData("quebecCasesByAge", 'graph7', getCasesByAgeRowData);
   return casesByAgeData;
 }
 
@@ -214,8 +240,8 @@ const getDeathsByAgeRowData = (entries: any) => {
   const data: any = [];
 
   entries.forEach((entry: any) => {
-    const ageGroup = entry.gsx$groupedâge.$t.replace(/ans/, 'years').replace(/et plus/, 'and above');
-    const deaths = normalizeInteger(entry.gsx$nombrededécès.$t);
+    const ageGroup = entry['Groupe d\'âge'].replace(/ans/, 'years').replace(/et plus/, 'and above');
+    const deaths = normalizeInteger(entry['Nombre de décès']);
 
     data.push({
       ageGroup,
@@ -227,7 +253,7 @@ const getDeathsByAgeRowData = (entries: any) => {
 }
 
 const getDeathsByAgeData = async () => {
-  const deathsByAgeData = await getSheetsData("quebecDeathsByAge", 8, getDeathsByAgeRowData);
+  const deathsByAgeData = await getCsvData("quebecDeathsByAge", 'graph8', getDeathsByAgeRowData);
   return deathsByAgeData;
 }
 
