@@ -36,8 +36,8 @@ const getLatestDict = async (url: string) => {
     const record = location.attributes;
     const country = record[Properties.Country];
     const province = record[Properties.Province] ?? "";
-    const lat = record[Properties.Lat];
-    const long = record[Properties.Long];
+    const lat = record[Properties.Lat] ?? 0;
+    const long = record[Properties.Long]?? 0;
     const confirmed = record[Properties.Confirmed];
     const recovered = record[Properties.Recovered];
     const deaths = record[Properties.Deaths];

@@ -75,7 +75,11 @@ const mergeCategories = (confirmed: ILocationDict, recovered: ILocationDict, dea
 
   const mergedValues = Object.entries<any>(merged);
   mergedValues.forEach(([location, value]) => {
-    merged[location] = { history: dictToArray(value) }
+    let locationData = null;
+    if (confirmed[location] !== undefined) {
+      locationData = confirmed[location].location;
+    }
+    merged[location] = { location: locationData, history: dictToArray(value) }
   })
 
   return merged;
