@@ -1,11 +1,12 @@
 
 import got from 'got';
 import cache from "../helpers/cache";
-import dayjs from "dayjs";
 import parse from "csv-parse/lib/sync";
-import customParseFormat from "dayjs/plugin/customParseFormat"
 import { getCanadaCases } from "../helpers/cases";
-dayjs.extend(customParseFormat);
+import dayjs from "dayjs";
+import 'dayjs/locale/fr-ca'
+import customParseFormat from "dayjs/plugin/customParseFormat"
+dayjs.extend(customParseFormat)
 
 const baseUrl = 'https://spreadsheets.google.com/feeds/list/1kmCbHvJFHe70GZNqOTP-sHjYDvJ_pa7zn2-gJhCNP3g/';
 const urlEnd = '/public/values?alt=json';
@@ -65,7 +66,7 @@ const getSummaryRowData = (entries: any) => {
   const intensive = normalizeInteger(entry.soins);
   const recovered = normalizeInteger(entry.gueris);
   const investigation = normalizeInteger(entry.invest);
-  const date = dayjs(entry.date, "DD/MM/YYYY").format("MM/DD/YYYY");
+  const date = dayjs(entry.date, "DD MMMM YYYY - HH", 'fr-ca').add(4, 'hour');
 
   const summary = {
     cases,

@@ -2,6 +2,9 @@
 import got from 'got';
 import cheerio from 'cheerio';
 import dayjs from 'dayjs'
+import 'dayjs/locale/fr-ca'
+import customParseFormat from "dayjs/plugin/customParseFormat"
+dayjs.extend(customParseFormat)
 
 const baseUrl = 'https://santemontreal.qc.ca/en/public/coronavirus-covid-19';
 
@@ -27,9 +30,15 @@ const getMontrealData = async () => {
   const total = neighbourhoodData.pop();
   neighbourhoodData.sort((a, b) => b.confirmed - a.confirmed);
 
-  const timeRegex = /.*extracted\son\s(\w+)\s(\d+).*(\d+)(\:\d+)*.*\s(\w\.*\w).*/i;
-  const time = table.next().text().trim().replace(timeRegex, '$1 $2 2020 $3 $4 EDT').toUpperCase();
-  const lastUpdate = dayjs(time);
+  let timeRegex = /.*extracted\son\s(\w+)\s(\d+).*(\d+)(\:\d+)*.*\s(\w\.*\w).*/i;
+  let time = table.next().text().trim().replace(timeRegex, '$1 $2 2020 $3 $4 EDT').toUpperCase();
+  let lastUpdate = dayjs(time);
+
+  if (isNaN(lastUpdate.valueOf())) {
+    timeRegex = /.*date\sdu\s(\d+)\s(\w+)\s(\d+).*/i;
+    time = table.next().text().trim().replace(timeRegex, '$1 $2 2020 $3 -0400');
+    lastUpdate = dayjs(time, 'DD MMMM YYYY HH ZZ', 'fr-ca');
+  }
 
   const montrealData = {
     confirmed: total.confirmed,

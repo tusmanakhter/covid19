@@ -56,7 +56,7 @@ const Stat = ({ stats }) => {
                 </EuiFlexGrid>
               </EuiFlexItem>
               <EuiFlexItem>
-                <EuiText textAlign="center">Last Update: {moment(stats.lastUpdate).format('MMMM Do YYYY h:mm A')}</EuiText>
+                <EuiText textAlign="center">Last Update: {moment(stats.data.date).format('MMMM Do YYYY h:mm A')}</EuiText>
               </EuiFlexItem>
             </EuiFlexGroup>
           </EuiFlexItem>
