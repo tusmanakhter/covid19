@@ -1,7 +1,7 @@
 import { getQuebecCases } from "./jhu-esri";
 import { getCanadaCases } from "../helpers/cases";
 import  { getMontrealData, getMontrealAgeData } from "../services/sante-montreal";
-import  { getConfirmedData } from "../services/quebec";
+import  { getDateData } from "../services/quebec";
 import cache from "../helpers/cache";
 
 const getData = async () => {
@@ -10,8 +10,8 @@ const getData = async () => {
     let quebecCases = cache.get("quebecCases");
     if ( quebecCases === undefined ) {
       const quebecCasesJHU = await getQuebecCases();
-      const quebecCAData: any = await getConfirmedData();
-      const quebecCasesCA = quebecCAData.data.pop().confirmed;
+      const quebecCAData: any = await getDateData();
+      const quebecCasesCA = quebecCAData.pop().confirmed;
 
       if (quebecCasesJHU !== undefined && quebecCasesCA !== undefined) {
         quebecCases = Math.max(quebecCasesCA, quebecCasesJHU);

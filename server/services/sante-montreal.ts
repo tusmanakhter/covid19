@@ -22,9 +22,9 @@ const getMontrealData = async () => {
     const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
     const confirmed = parseInt(confirmedString.replace(/,|<|\s/g, ''), 10);
     const distributionString = html(element).find('td:nth-of-type(3)').text();
-    const distribution = parseFloat(distributionString.replace(/\s|-/g, '0').replace(/,/g, '.'));
+    const distribution = parseFloat(distributionString.replace(/\s|-/g, '0'));
     const perHundredString = html(element).find('td:nth-of-type(4)').text();
-    const perHundred = parseFloat(perHundredString.replace(/n\.p\.|\*|-/g, '0').replace(/\s/g, '').replace(/,/g, '.'));
+    const perHundred = parseFloat(perHundredString.replace(/n\.p\.|\*|-/g, '0').replace(/,|\s/g, ''));
     return { location, confirmed, distribution, perHundred }
   }).get();
   const total = neighbourhoodData.pop();
@@ -61,9 +61,9 @@ const getMontrealAgeData = async () => {
     const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
     const confirmed = parseInt(confirmedString.replace(/,|<|\s/g, ''), 10);
     const distributionString = html(element).find('td:nth-of-type(3)').text();
-    const distribution = parseFloat(distributionString.replace(/\s|-/g, '0').replace(/,/g, '.'));
+    const distribution = parseFloat(distributionString.replace(/\s|-/g, '0'));
     const perHundredString = html(element).find('td:nth-of-type(4)').text();
-    const perHundred = parseFloat(perHundredString.replace(/n\.p\.|\*|-/g, '0').replace(/\s/g, '').replace(/,/g, '.'));
+    const perHundred = parseFloat(perHundredString.replace(/n\.p\.|\*|-/g, '0').replace(/,|\s/g, ''));
     return { ageGroup, confirmed, distribution, perHundred }
   }).get();
   ageData.pop();

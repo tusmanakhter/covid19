@@ -8,30 +8,6 @@ import 'dayjs/locale/fr-ca'
 import customParseFormat from "dayjs/plugin/customParseFormat"
 dayjs.extend(customParseFormat)
 
-const baseUrl = 'https://spreadsheets.google.com/feeds/list/1kmCbHvJFHe70GZNqOTP-sHjYDvJ_pa7zn2-gJhCNP3g/';
-const urlEnd = '/public/values?alt=json';
-
-const getSheetsData = async (cacheKey: string, sheetPage: number, getRowData: Function) => {
-  let data = cache.get(cacheKey);
-
-  if ( data === undefined ) {
-    const url = `${baseUrl}${sheetPage}${urlEnd}`;
-    const response: any = await got(url).json();
-    const lastUpdate = response.feed.updated.$t;
-    const entries = response.feed.entry;
-    const rowData = getRowData(entries)
-
-    data = {
-      lastUpdate,
-      data: rowData,
-    }
-
-    cache.set(cacheKey, data, 600);
-  }
-
-  return data;
-}
-
 const getCsvData = async (cacheKey: string, page: string, getRowData: Function) => {
   let data = cache.get(cacheKey);
 
@@ -47,9 +23,7 @@ const getCsvData = async (cacheKey: string, page: string, getRowData: Function) 
     })
     const rowData = getRowData(records)
 
-    data = {
-      data: rowData,
-    }
+    data = rowData,
 
     cache.set(cacheKey, data, 600);
   }
@@ -86,73 +60,28 @@ const getSummaryData = async () => {
   return summaryData;
 }
 
-const getConfirmedRowData = (entries: any) => {
+const getDateRowData = (entries: any) => {
   const history: any = [];
 
   entries.forEach((entry: any) => {
     const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
-    const confirmed = normalizeInteger(entry['Nombre cumulatif de cas']);
-    let daily = normalizeInteger(entry['Nouveaux cas']);
-
-    // Handle first row
-    if (isNaN(daily)){
-      daily = confirmed;
-    }
+    const negative = normalizeInteger(entry['Cumul des personnes avec des analyses négatives']);
+    const confirmed = normalizeInteger(entry['Cumul de cas confirmés']);
+    const deaths = normalizeInteger(entry['Nombre cumulatif de décès']);
+    const positive = confirmed;
+    const hospitalizations = normalizeInteger(entry['Hospitalisations']);
+    const intensive = normalizeInteger(entry['Soins intensifs']);
+    const dailyDeaths = normalizeInteger(entry['Nouveaux décès']);
+    const dailyConfirmed = normalizeInteger(entry['Nouveaux cas']);
 
     history.push({
       date,
       confirmed,
-      daily,
-    })
-  })
-
-  return history;
-}
-
-const getConfirmedData = async () => {
-  const confirmedData = await getCsvData("quebecConfirmed", 'graph1', getConfirmedRowData);
-  return confirmedData;
-}
-
-const getDeathsRowData = (entries: any) => {
-  const history: any = [];
-
-  entries.forEach((entry: any) => {
-    const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
-    const deaths = normalizeInteger(entry['Nombre cumulatif de décès']);
-    let daily = normalizeInteger(entry['Nouveaux décès']);
-
-    // Handle first row
-    if (isNaN(daily)){
-      daily = deaths;
-    }
-
-    history.push({
-      date,
+      dailyConfirmed,
       deaths,
-      daily,
-    })
-  })
-
-  return history;
-}
-
-const getDeathsData = async () => {
-  const deathsData = await getCsvData("quebecDeaths", 'graph2', getDeathsRowData);
-  return deathsData;
-}
-
-
-const getHospitalizationRowData = (entries: any) => {
-  const history: any = [];
-
-  entries.forEach((entry: any) => {
-    const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
-    const hospitalizations = normalizeInteger(entry['Hospitalisations']);
-    const intensive = normalizeInteger(entry['Soins intensifs']);
-
-    history.push({
-      date,
+      dailyDeaths,
+      negative,
+      positive,
       hospitalizations,
       intensive,
     })
@@ -161,32 +90,9 @@ const getHospitalizationRowData = (entries: any) => {
   return history;
 }
 
-const getHospitalizationData = async () => {
-  const hospitalizationData = await getCsvData("quebecHospitalization", 'graph3', getHospitalizationRowData);
-  return hospitalizationData;
-}
-
-const getAnalysisRowData = (entries: any) => {
-  const history: any = [];
-
-  entries.forEach((entry: any) => {
-    const date = dayjs(entry['Date'], "DD/MM/YYYY").format("MM/DD/YYYY");
-    const negative = normalizeInteger(entry['Cumul des personnes avec des analyses négatives']);
-    const positive = normalizeInteger(entry['Cumul de cas confirmés']);
-
-    history.push({
-      date,
-      negative,
-      positive,
-    })
-  })
-
-  return history;
-}
-
-const getAnalysisData = async () => {
-  const analysisData = await getCsvData("quebecAnalysis", 'graph4', getAnalysisRowData);
-  return analysisData;
+const getDateData = async () => {
+  const dateData = await getCsvData("quebecDate", 'combine', getDateRowData);
+  return dateData;
 }
 
 const getCasesPerRegionRowData = (entries: any) => {
@@ -259,48 +165,47 @@ const getDeathsByAgeData = async () => {
 }
 
 const getQuebecData = async () => {
-  const [summary, confirmed, deaths, hospitalizations, analysis, casesPerRegion, casesByAge, deathsByAge]: any = await Promise.all([
+  const [summary, date, casesPerRegion, casesByAge, deathsByAge]: any = await Promise.all([
     getSummaryData(),
-    getConfirmedData(),
-    getDeathsData(),
-    getHospitalizationData(),
-    getAnalysisData(),
+    getDateData(),
     getCasesPerRegionData(),
     getCasesByAgeData(),
     getDeathsByAgeData(),
   ]);
 
-  const ageData = casesByAge.data.map((item, i) => Object.assign({}, item, deathsByAge.data[i]));
+  const ageData = casesByAge.map((item, i) => Object.assign({}, item, deathsByAge[i]));
 
-  const byAge = {
-    lastUpdate: casesByAge.lastUpdate,
-    data: ageData,
-  }
-  
-  const lastAnalysis = analysis.data.splice(-1).pop();
+  const byAge = ageData;
+  const lastAnalysis = date.slice(-1).pop();
+
   const canadaCases = await getCanadaCases();
 
-  summary.data.negative = lastAnalysis.negative;
-  summary.data.totalTests = lastAnalysis.negative + lastAnalysis.positive;
-  summary.data.percentCanada = parseFloat(((summary.data.cases/canadaCases)*100).toFixed(2));
+  summary.negative = lastAnalysis.negative;
+  summary.totalTests = lastAnalysis.negative + lastAnalysis.positive;
+  summary.percentCanada = parseFloat(((summary.cases/canadaCases)*100).toFixed(2));
 
   return {
     summary,
-    confirmed,
-    deaths,
-    hospitalizations,
-    analysis,
+    date,
     casesPerRegion,
     byAge,
   }
 }
 
 const normalizeInteger = (integer: string) => {
-  return parseInt(integer.replace(/\s/g,''), 10);
+  const parsed = parseInt(integer.replace(/\s/g,''), 10);
+  if (isNaN(parsed)) {
+    return 0;
+  }
+  return parsed;
 }
 
 const normalizeFloat = (float: string) => {
-  return parseFloat(float.replace(/\s/g,''));
+  const parsed = parseFloat(float.replace(/\s/g,''));
+  if (isNaN(parsed)) {
+    return 0;
+  }
+  return parsed;
 }
 
-export { getQuebecData, getConfirmedData };
+export { getQuebecData, getDateData };

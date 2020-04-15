@@ -206,7 +206,7 @@ const Chart = ({ title, data }) => {
         ) : (
           <EuiFlexGroup className="chart main-chart" alignItems="center" justifyContent="center" gutterSize="none">
             <EuiFlexItem grow={false}>
-              <EuiLoadingChart size="xl" />
+              <EuiLoadingChart size="l" mono />
             </EuiFlexItem>
           </EuiFlexGroup>
         )

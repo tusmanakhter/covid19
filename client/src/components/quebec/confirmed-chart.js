@@ -8,7 +8,7 @@ const ConfirmedChart = ({ data }) => (
     title="Confirmed cases"
     barColor="#66A6D2"
     lineColor="#006BB4"
-    barAccessor="daily"
+    barAccessor="dailyConfirmed"
     lineAccessor="confirmed"
     barName="Daily Confirmed"
     lineName="Confirmed"

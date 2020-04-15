@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Map, CircleMarker, Popup, TileLayer } from 'react-leaflet'
-import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
+import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingChart } from '@elastic/eui';
 import { getColor } from '../../helpers/color';
 import './leaflet.css';
 
@@ -82,20 +82,28 @@ const Leaflet = ({ data, selectedData, markerType }) => {
   return (
     <>
       {
-        <Map 
-          center={position} 
-          zoom={zoom} 
-          minZoom={1} 
-          onViewportChanged={onViewportChanged}
-          useFlyTo={true}
-          className="main-leaflet"
-        >
-          <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          />
-          {markers}
-        </Map>
+        markers ? (
+          <Map 
+            center={position} 
+            zoom={zoom} 
+            minZoom={1} 
+            onViewportChanged={onViewportChanged}
+            useFlyTo={true}
+            className="main-leaflet"
+          >
+            <TileLayer
+              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            />
+            {markers}
+          </Map>
+        ) : (
+          <EuiFlexGroup className="main-leaflet" alignItems="center" justifyContent="center">
+            <EuiFlexItem grow={false}>
+              <EuiLoadingChart size="l" mono />
+            </EuiFlexItem>
+          </EuiFlexGroup>
+        )
       }
     </>
   )

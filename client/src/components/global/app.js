@@ -5,7 +5,7 @@ import Stats from './stats';
 import Leaflet from './leaflet';
 import Chart from './chart';
 import ky from 'ky';
-import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingSpinner } from '@elastic/eui';
+import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
 import { getIncrease, getPercentTotal } from '../../helpers/stats';
 import './app.css';
 
@@ -127,37 +127,31 @@ const App = () => {
 
   return (
     <Layout>
-      {data ? (
-        <div>
-          <EuiFlexGroup gutterSize="s">
-            <EuiFlexItem grow={false}>
-              <EuiPanel className="leftBar">
-                <Stats data={selectedData} onBack={resetSelected}/>
-                <EuiHorizontalRule margin="s"/>
-                <Locations data={tableData} onRowClick={selectRow} isProvince={isProvince} displayStat={displayStat} setDisplayStat={setDisplayStat} selected={selected}/>
-              </EuiPanel>
-            </EuiFlexItem>
-            <EuiFlexItem>
-              <EuiFlexGroup gutterSize="s" direction="column">
-                <EuiFlexItem grow={4}>
-                  <EuiPanel paddingSize="none">
-                    <Leaflet data={mapData} selectedData={selectedData} markerType={displayStat} />
-                  </EuiPanel>
-                </EuiFlexItem>
-                <EuiFlexItem grow={3}>
-                  <EuiPanel style={{ height: '100%', paddingBottom: 0 }}>
-                    <Chart title={selected} data={selectedData} />
-                  </EuiPanel>
-                </EuiFlexItem>
-              </EuiFlexGroup>
-            </EuiFlexItem>
-          </EuiFlexGroup>
-        </div>
-      ) : (
-        <div className="container">
-          <EuiLoadingSpinner size="xl" />
-        </div>
-      )}
+      <div>
+        <EuiFlexGroup gutterSize="s">
+          <EuiFlexItem grow={false}>
+            <EuiPanel className="leftBar">
+              <Stats data={selectedData} onBack={resetSelected}/>
+              <EuiHorizontalRule margin="s"/>
+              <Locations data={tableData} onRowClick={selectRow} isProvince={isProvince} displayStat={displayStat} setDisplayStat={setDisplayStat} selected={selected}/>
+            </EuiPanel>
+          </EuiFlexItem>
+          <EuiFlexItem>
+            <EuiFlexGroup gutterSize="s" direction="column">
+              <EuiFlexItem grow={4}>
+                <EuiPanel paddingSize="none">
+                  <Leaflet data={mapData} selectedData={selectedData} markerType={displayStat} />
+                </EuiPanel>
+              </EuiFlexItem>
+              <EuiFlexItem grow={3}>
+                <EuiPanel style={{ height: '100%', paddingBottom: 0 }}>
+                  <Chart title={selected} data={selectedData} />
+                </EuiPanel>
+              </EuiFlexItem>
+            </EuiFlexGroup>
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      </div>
     </Layout>
   )
 }

@@ -12,6 +12,12 @@
   }
 }
 
+@media only screen and (max-width: 767px) {
+  .leftBar {
+    min-height: 1060px;
+  }
+}
+
 .container {
   display: flex;
   justify-content: center;

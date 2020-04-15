@@ -103,6 +103,11 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
     listRef.current.scrollToItem(0);
   }
 
+  const invertSort = () => {
+    setDescend(!descend);
+    listRef.current.scrollToItem(0);
+  }
+
   useEffect(() => {
     setQuery(initialQuery);
   }, [selected]);
@@ -115,7 +120,7 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
   }
 
   let filteredData;
-  if (query !== initialQuery) {
+  if (query !== initialQuery && query !== null) {
     filteredData = data.filter((item) => {
       return item.location[location].toLowerCase().includes(query.text.toLowerCase());
     });
@@ -200,7 +205,7 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
           <EuiButtonIcon
             aria-label={icon}
             iconType={icon}
-            onClick={() => setDescend(!descend)}
+            onClick={() => invertSort()}
           />
         </EuiFlexItem>
       </EuiFlexGroup>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Chart as ElasticChart,
@@ -13,14 +13,12 @@ import { EuiLoadingChart, EuiFlexItem, EuiFlexGroup, EuiSwitch, EuiTitle, EuiHor
 import '@elastic/charts/dist/theme_light.css';
 import { EUI_CHARTS_THEME_LIGHT } from '@elastic/eui/dist/eui_charts_theme';
 import '../global/chart.css';
-import { mergeDateResults } from '../../helpers/summarize';
 
 const dateFormatter = timeFormatter('MMM DD');
 const numberFormatter = (value) => value.toLocaleString();
 
 const SummaryChart = ({ data }) => {
   const [logScale, setLogScale] = useState(false);
-  const [history, setHistory] = useState();
 
   let scaleType;
   if (logScale) {
@@ -29,17 +27,10 @@ const SummaryChart = ({ data }) => {
     scaleType = ScaleType.Linear;
   }
 
-  useEffect(() => {
-    if (data) {
-      const history = mergeDateResults(data.confirmed, data.deaths, data.hospitalizations, data.analysis);
-      setHistory(history);
-    }
-  }, [data]);
-
   return (
     <>
       {
-        history ? (
+        data ? (
           <EuiFlexGroup direction="column">
             <EuiFlexItem grow={false}>
               <EuiFlexGroup alignItems="center">
@@ -69,7 +60,7 @@ const SummaryChart = ({ data }) => {
                   name="Confirmed Cases"
                   xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
-                  data={history}
+                  data={data}
                   xAccessor={"date"}
                   yAccessors={["confirmed"]}
                   color={"#006BB4"}
@@ -85,7 +76,7 @@ const SummaryChart = ({ data }) => {
                   name="Negative Tests"
                   xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
-                  data={history}
+                  data={data}
                   xAccessor={"date"}
                   yAccessors={["negative"]}
                   color={"#017D73"}
@@ -101,7 +92,7 @@ const SummaryChart = ({ data }) => {
                   name="Deaths"
                   xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
-                  data={history}
+                  data={data}
                   xAccessor={"date"}
                   yAccessors={["deaths"]}
                   color={"#BD271E"}
@@ -117,7 +108,7 @@ const SummaryChart = ({ data }) => {
                   name="Hospitalizations"
                   xScaleType={ScaleType.Date}
                   yScaleType={scaleType}
-                  data={history}
+                  data={data}
                   xAccessor={"date"}
                   yAccessors={["hospitalizations"]}
                   color={"#F5A700"}

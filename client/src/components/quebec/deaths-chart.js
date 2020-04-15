@@ -8,7 +8,7 @@ const DeathsChart = ({ data }) => (
     title="Deaths"
     barColor="#D77D78"
     lineColor="#BD271E"
-    barAccessor="daily"
+    barAccessor="dailyDeaths"
     lineAccessor="deaths"
     barName="Daily Deaths"
     lineName="Deaths"

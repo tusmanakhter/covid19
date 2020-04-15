@@ -27,36 +27,36 @@ const Stat = ({ stats }) => {
               <EuiFlexItem>
                 <EuiFlexGrid columns={3}>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.cases.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="primary" reverse />
+                    <EuiStat title={stats.cases.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="primary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.deaths.toLocaleString()} description="Deaths" titleSize="m" textAlign="center" titleColor="danger" reverse />
+                    <EuiStat title={stats.deaths.toLocaleString()} description="Deaths" titleSize="m" textAlign="center" titleColor="danger" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.recovered.toLocaleString()} description="Recovered" titleSize="m" textAlign="center" titleColor="secondary" reverse />
+                    <EuiStat title={stats.recovered.toLocaleString()} description="Recovered" titleSize="m" textAlign="center" titleColor="secondary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.hospitalizations.toLocaleString()} description="Hospitalized" titleSize="m" textAlign="center" titleColor="danger" reverse />
+                    <EuiStat title={stats.hospitalizations.toLocaleString()} description="Hospitalized" titleSize="m" textAlign="center" titleColor="danger" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.intensive.toLocaleString()} description="in Intensive Care" titleSize="m" textAlign="center" titleColor="danger" reverse />
+                    <EuiStat title={stats.intensive.toLocaleString()} description="in Intensive Care" titleSize="m" textAlign="center" titleColor="danger" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.investigation.toLocaleString()} description="under Investigation" titleSize="m" textAlign="center" titleColor="danger" reverse />
+                    <EuiStat title={stats.investigation.toLocaleString()} description="under Investigation" titleSize="m" textAlign="center" titleColor="danger" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.totalTests.toLocaleString()} description="Total Tests" titleSize="m" textAlign="center" titleColor="primary" reverse />
+                    <EuiStat title={stats.totalTests.toLocaleString()} description="Total Tests" titleSize="m" textAlign="center" titleColor="primary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.data.negative.toLocaleString()} description="Negative Tests" titleSize="m" textAlign="center" titleColor="secondary" reverse />
+                    <EuiStat title={stats.negative.toLocaleString()} description="Negative Tests" titleSize="m" textAlign="center" titleColor="secondary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={`${stats.data.percentCanada}%`} description="of Canada's cases" titleSize="m" textAlign="center" titleColor="danger" reverse />
+                    <EuiStat title={`${stats.percentCanada}%`} description="of Canada's cases" titleSize="m" textAlign="center" titleColor="danger" reverse />
                   </EuiFlexItem>
                 </EuiFlexGrid>
               </EuiFlexItem>
               <EuiFlexItem>
-                <EuiText textAlign="center">Last Update: {moment(stats.data.date).format('MMMM Do YYYY h:mm A')}</EuiText>
+                <EuiText textAlign="center">Last Update: {moment(stats.date).format('MMMM Do YYYY h:mm A')}</EuiText>
               </EuiFlexItem>
             </EuiFlexGroup>
           </EuiFlexItem>

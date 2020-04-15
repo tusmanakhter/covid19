@@ -18,29 +18,21 @@ const App = () => {
   const [stats, setStats] = useState();
   const [tableData, setTableData] = useState([]);
   const [ageData, setAgeData] = useState();
-  const [confirmedData, setConfirmedData] = useState();
-  const [deathsData, setDeathsData] = useState();
-  const [analysisData, setAnalysisData] = useState();
-  const [hospitalData, setHospitalData] = useState();
-  const [summaryData, setSummaryData] = useState();
+  const [dateData, setDateData] = useState();
 
   useEffect(() => {
     (async () => {
       const data = await ky.get(`${process.env.API_URL}/api/quebec`).json();
-      const dict = data.casesPerRegion.data.reduce((map, obj) => {
+      const dict = data.casesPerRegion.reduce((map, obj) => {
         const key = getKey(obj.region);
         map[key] = { ...obj };
         return map;
       }, {});
-      setConfirmedData(data.confirmed.data);
-      setDeathsData(data.deaths.data);
-      setAnalysisData(data.analysis.data);
-      setHospitalData(data.hospitalizations.data);
-      setTableData(data.casesPerRegion.data);
-      setAgeData(data.byAge.data);
+      setDateData(data.date);
+      setTableData(data.casesPerRegion);
+      setAgeData(data.byAge);
       setMapData(dict);
       setStats(data.summary);
-      setSummaryData(data);
     })();
   }, []);
 
@@ -70,7 +62,7 @@ const App = () => {
                 </EuiFlexItem>
                 <EuiFlexItem>
                   <EuiPanel>
-                    <Summary data={summaryData} />
+                    <Summary data={dateData} />
                   </EuiPanel>
                 </EuiFlexItem>
               </EuiFlexGroup>
@@ -79,22 +71,22 @@ const App = () => {
         </EuiFlexItem>
         <EuiFlexItem>
           <EuiPanel>
-            <Confirmed data={confirmedData} />
+            <Confirmed data={dateData} />
           </EuiPanel>
         </EuiFlexItem>
         <EuiFlexItem>
           <EuiPanel>
-            <Deaths data={deathsData} />
+            <Deaths data={dateData} />
           </EuiPanel>
         </EuiFlexItem>
         <EuiFlexItem>
           <EuiPanel>
-            <Hospitalizations data={hospitalData} />
+            <Hospitalizations data={dateData} />
           </EuiPanel>
         </EuiFlexItem>
         <EuiFlexItem>
           <EuiPanel>
-            <Testing data={analysisData} />
+            <Testing data={dateData} />
           </EuiPanel>
         </EuiFlexItem>
         <EuiFlexItem>
