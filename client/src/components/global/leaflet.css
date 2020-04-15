@@ -20,6 +20,10 @@
   overflow: hidden;
 }
 
+.main-leaflet {
+	height: 100%;
+}
+
 @media only screen and (max-width: 767px) {
 .leaflet-container {
   height: 400px;

@@ -7,7 +7,7 @@
   "dependencies": {
     "@elastic/charts": "^18.2.0",
     "@elastic/datemath": "^5.0.2",
-    "@elastic/eui": "^22.1.1",
+    "@elastic/eui": "^22.5.0",
     "dotenv": "^8.2.0",
     "gatsby": "^2.19.45",
     "gatsby-image": "^2.2.44",
@@ -30,7 +30,9 @@
     "react-helmet": "^5.2.1",
     "react-leaflet": "^2.6.3",
     "react-leaflet-control": "^2.1.2",
-    "react-responsive": "^8.0.3"
+    "react-responsive": "^8.0.3",
+    "react-virtualized-auto-sizer": "^1.0.2",
+    "react-window": "^1.8.5"
   },
   "devDependencies": {
     "gh-pages": "^2.2.0",

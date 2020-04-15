@@ -7,7 +7,7 @@ import logoSvg from '../images/corona.svg';
 import '../themes/theme_light.scss';
 import './layout.css';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, global }) => {
   return (
     <>
       <EuiHeader position="fixed" className="header">
@@ -48,26 +48,38 @@ const Layout = ({ children }) => {
           }
         </EuiHeaderSection>
       </EuiHeader>
-      <EuiPage className="page">
-        <EuiFlexGroup direction="column" gutterSize="none">
-          <EuiFlexItem>
+      {
+        global ? (
+          <>
             {children}
-          </EuiFlexItem>
-          <EuiSpacer />
-          <EuiFlexItem grow={false}>
-            <EuiText textAlign="center" className="footer">
-              <p>Created by <OutboundLink target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</OutboundLink></p>
-              <p>Support me on <OutboundLink target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/tusmanakhter">Ko-Fi</OutboundLink></p>
-            </EuiText>
-          </EuiFlexItem>
-        </EuiFlexGroup>
-      </EuiPage>
+          </>
+        ) : (
+          <EuiPage className="page">
+            <EuiFlexGroup direction="column" gutterSize="none">
+              <EuiFlexItem>
+                {children}
+              </EuiFlexItem>
+              <EuiSpacer size="s"/>
+              <EuiFlexItem grow={false}>
+                <EuiText textAlign="center" className="footer">
+                  <p>Created by <OutboundLink target="_blank" rel="noopener noreferrer" href="https://www.tusmanakhter.com/">Tusman Akhter</OutboundLink></p>
+                </EuiText>
+              </EuiFlexItem>
+            </EuiFlexGroup>
+          </EuiPage>
+        )
+      }
     </>
   )
 }
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
+  global: PropTypes.bool,
+}
+
+Layout.defaulyProps = {
+  global: false,
 }
 
 export default Layout;

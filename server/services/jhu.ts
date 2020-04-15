@@ -34,6 +34,7 @@ const getAll = async () => {
             recovered: 0,
             deaths: 0,
             active: 0,
+            perCapita: 0,
             lastUpdate: 0
           }
         }

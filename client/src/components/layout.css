@@ -52,3 +52,19 @@ body {
     display: none;
   }
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: solid 2px #fff;
+  background: #bcbab7;
+  min-height: 40px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}

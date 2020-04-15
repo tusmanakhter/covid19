@@ -13,6 +13,10 @@
   height: 350px;
 }
 
+.main-chart {
+  height: 100%;
+}
+
 @media only screen and (max-width: 767px) {
   .chart  {
     height: 300px;
@@ -27,5 +31,19 @@
   .chart.euiFlexGroup--responsive > .euiFlexItem {
     flex-basis: auto !important;
     width: auto !important;
+  }
+}
+
+.euiSwitch .euiSwitch__label {
+  white-space: nowrap;
+}
+
+.chart-group {
+  height: 100%;
+}
+
+@media only screen and (max-width: 767px) {
+  .chart-group {
+    height: auto;
   }
 }

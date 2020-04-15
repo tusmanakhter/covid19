@@ -3,3 +3,7 @@
   justify-content: center;
   align-items: center;
 }
+
+.panel p {
+  margin-bottom: 5px;
+}
