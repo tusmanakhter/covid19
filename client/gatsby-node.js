@@ -23,6 +23,10 @@ exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
             test: /@elastic\/eui\/es\/components\/popover/,
             use: loaders.null(),
           },
+          {
+            test: /@elastic\/eui\/es\/components\/form\/super_select/,
+            use: loaders.null(),
+          },
         ],
       },
     })

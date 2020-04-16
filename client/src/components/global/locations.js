@@ -194,13 +194,15 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
         <EuiSpacer size="s"/>
         <EuiFlexGroup responsive={false} gutterSize="s" alignItems="center">
           <EuiFlexItem>
-            <EuiSuperSelect
-              fullWidth
-              options={options}
-              valueOfSelected={sort}
-              onChange={(option) => setSelected(option)}
-              compressed
-            />
+            {EuiSuperSelect && (
+              <EuiSuperSelect
+                fullWidth
+                options={options}
+                valueOfSelected={sort}
+                onChange={(option) => setSelected(option)}
+                compressed
+              />
+            )}
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
             <EuiButtonIcon
