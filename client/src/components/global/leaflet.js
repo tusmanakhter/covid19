@@ -98,7 +98,7 @@ const Leaflet = ({ data, selectedData, markerType }) => {
             {markers}
           </Map>
         ) : (
-          <EuiFlexGroup className="main-leaflet" alignItems="center" justifyContent="center">
+          <EuiFlexGroup className="chart" alignItems="center" justifyContent="center">
             <EuiFlexItem grow={false}>
               <EuiLoadingChart size="l" mono />
             </EuiFlexItem>

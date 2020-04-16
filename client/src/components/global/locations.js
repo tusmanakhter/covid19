@@ -181,35 +181,37 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
 
   return (
     <>
-      <EuiSearchBar
-        defaultQuery={initialQuery}
-        query={query}
-        box={{
-          placeholder: 'Search for a location...',
-          incremental: true,
-        }}
-        onChange={({query, error}) => setQuery(query)}
-      />
-      <EuiSpacer />
-      <EuiFlexGroup responsive={false} gutterSize="s" alignItems="center">
-        <EuiFlexItem>
-          <EuiSuperSelect
-            fullWidth
-            options={options}
-            valueOfSelected={sort}
-            onChange={(option) => setSelected(option)}
-            compressed
-          />
-        </EuiFlexItem>
-        <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            aria-label={icon}
-            iconType={icon}
-            onClick={() => invertSort()}
-          />
-        </EuiFlexItem>
-      </EuiFlexGroup>
-      <EuiHorizontalRule margin="s" style={{ marginBottom: 0 }}/>
+      <div>
+        <EuiSearchBar
+          defaultQuery={initialQuery}
+          query={query}
+          box={{
+            placeholder: 'Search for a location...',
+            incremental: true,
+          }}
+          onChange={({query, error}) => setQuery(query)}
+        />
+        <EuiSpacer size="s"/>
+        <EuiFlexGroup responsive={false} gutterSize="s" alignItems="center">
+          <EuiFlexItem>
+            <EuiSuperSelect
+              fullWidth
+              options={options}
+              valueOfSelected={sort}
+              onChange={(option) => setSelected(option)}
+              compressed
+            />
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <EuiButtonIcon
+              aria-label={icon}
+              iconType={icon}
+              onClick={() => invertSort()}
+            />
+          </EuiFlexItem>
+        </EuiFlexGroup>
+        <EuiHorizontalRule margin="s" style={{ marginBottom: 0 }}/>
+      </div>
       <div className="auto-sizer">
         <AutoSizer>
           {({ height, width }) => (
