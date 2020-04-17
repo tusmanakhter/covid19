@@ -2,32 +2,71 @@
 import got from 'got';
 import cache from "../helpers/cache";
 import parse from "csv-parse/lib/sync";
+import { Options } from "csv-parse";
 import { getCanadaCases } from "../helpers/cases";
 import dayjs from "dayjs";
 import 'dayjs/locale/fr-ca'
 import customParseFormat from "dayjs/plugin/customParseFormat"
 dayjs.extend(customParseFormat)
 
-const getCsvData = async (cacheKey: string, page: string, getRowData: Function) => {
-  let data = cache.get(cacheKey);
+const getDateData = async () => {
+  const cacheKey = 'quebecDate';
+  let data = cache.get('cacheKey');
 
   if ( data === undefined ) {
     const date = new Date();
     const time = date.getTime();
     
-    const url = `https://www.inspq.qc.ca/sites/default/files/covid/donnees/${page}.csv?randNum=${time}`;
+    const url = `https://www.inspq.qc.ca/sites/default/files/covid/donnees/combine.csv?randNum=${time}`;
     const response: any = await got(url).text();
-    const records = parse(response, {
-      columns: true,
-      skip_empty_lines: true
-    })
-    const rowData = getRowData(records)
-
-    data = rowData,
-
+    data = parseCsvData(getDateRowData, response);
     cache.set(cacheKey, data, 600);
   }
 
+  return data;
+}
+
+const getOtherData = async () => {
+  const cacheKey = 'quebecOther';
+  let data = cache.get('cacheKey');
+
+  if ( data === undefined ) {
+    const date = new Date();
+    const time = date.getTime();
+    
+    const url = `https://www.inspq.qc.ca/sites/default/files/covid/donnees/combine2.csv?randNum=${time}`;
+    const response: any = await got(url).text();
+
+    const summary = parseCsvData(getSummaryRowData, response, 2, 3);
+    const casesPerRegion = parseCsvData(getCasesPerRegionRowData, response, 12, 30);
+    const casesByAge = parseCsvData(getCasesByAgeRowData, response, 34, 40);
+    const deathsByAge = parseCsvData(getDeathsByAgeRowData, response, 50, 56);
+    
+    data = {
+      summary,
+      casesPerRegion,
+      casesByAge,
+      deathsByAge,
+    }
+    cache.set(cacheKey, data, 600);
+  }
+
+  return data;
+}
+
+const parseCsvData = (getRowData: Function, responseData: string, from: number = null, to: number = null) => {
+  const options: Options = {
+    columns: true,
+  }
+
+  if (from && to) {
+    options.from_line = from;
+    options.to_line = to;
+  }
+
+  const records = parse(responseData, options).filter(item => item);
+  const rowData = getRowData(records)
+  const data = rowData;
   return data;
 }
 
@@ -53,11 +92,6 @@ const getSummaryRowData = (entries: any) => {
   }
 
   return summary;
-}
-
-const getSummaryData = async () => {
-  const summaryData = await getCsvData("quebecSummary", 'tuiles', getSummaryRowData);
-  return summaryData;
 }
 
 const getDateRowData = (entries: any) => {
@@ -90,11 +124,6 @@ const getDateRowData = (entries: any) => {
   return history;
 }
 
-const getDateData = async () => {
-  const dateData = await getCsvData("quebecDate", 'combine', getDateRowData);
-  return dateData;
-}
-
 const getCasesPerRegionRowData = (entries: any) => {
   const regions: any = [];
 
@@ -117,11 +146,6 @@ const getCasesPerRegionRowData = (entries: any) => {
   return regions;
 }
 
-const getCasesPerRegionData = async () => {
-  const regionData = await getCsvData("quebecCasesPerRegion", 'graph5', getCasesPerRegionRowData);
-  return regionData;
-}
-
 const getCasesByAgeRowData = (entries: any) => {
   const data: any = [];
 
@@ -136,11 +160,6 @@ const getCasesByAgeRowData = (entries: any) => {
   })
 
   return data;
-}
-
-const getCasesByAgeData = async () => {
-  const casesByAgeData = await getCsvData("quebecCasesByAge", 'graph7', getCasesByAgeRowData);
-  return casesByAgeData;
 }
 
 const getDeathsByAgeRowData = (entries: any) => {
@@ -159,35 +178,27 @@ const getDeathsByAgeRowData = (entries: any) => {
   return data;
 }
 
-const getDeathsByAgeData = async () => {
-  const deathsByAgeData = await getCsvData("quebecDeathsByAge", 'graph8', getDeathsByAgeRowData);
-  return deathsByAgeData;
-}
-
 const getQuebecData = async () => {
-  const [summary, date, casesPerRegion, casesByAge, deathsByAge]: any = await Promise.all([
-    getSummaryData(),
+  const [date, other]: any = await Promise.all([
     getDateData(),
-    getCasesPerRegionData(),
-    getCasesByAgeData(),
-    getDeathsByAgeData(),
+    getOtherData(),
   ]);
 
-  const ageData = casesByAge.map((item, i) => Object.assign({}, item, deathsByAge[i]));
+  const ageData = other.casesByAge.map((item, i) => Object.assign({}, item, other.deathsByAge[i]));
 
   const byAge = ageData;
   const lastAnalysis = date.slice(-1).pop();
 
   const canadaCases = await getCanadaCases();
 
-  summary.negative = lastAnalysis.negative;
-  summary.totalTests = lastAnalysis.negative + lastAnalysis.positive;
-  summary.percentCanada = parseFloat(((summary.cases/canadaCases)*100).toFixed(2));
+  other.summary.negative = lastAnalysis.negative;
+  other.summary.totalTests = lastAnalysis.negative + lastAnalysis.positive;
+  other.summary.percentCanada = parseFloat(((other.summary.cases/canadaCases)*100).toFixed(2));
 
   return {
-    summary,
+    summary: other.summary,
     date,
-    casesPerRegion,
+    casesPerRegion: other.casesPerRegion,
     byAge,
   }
 }

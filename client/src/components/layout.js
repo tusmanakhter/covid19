@@ -48,12 +48,6 @@ const Layout = ({ children, global }) => {
           }
         </EuiHeaderSection>
       </EuiHeader>
-      <EuiCallOut
-        size="s"
-        title="Website is currently undergoing some changes. Any bugs will be fixed ASAP."
-        iconType="pin"
-        style={{ marginTop: -10 }}
-      />
       {
         global ? (
           <>
