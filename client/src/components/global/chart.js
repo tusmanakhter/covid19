@@ -13,7 +13,7 @@ import {
 import { EuiLoadingChart, EuiFlexItem, EuiFlexGroup, EuiSwitch, EuiTitle, EuiHorizontalRule } from '@elastic/eui';
 import '@elastic/charts/dist/theme_light.css';
 import { EUI_CHARTS_THEME_LIGHT } from '@elastic/eui/dist/eui_charts_theme';
-import { getColor } from '../../helpers/color';
+import { getColor } from '../../helpers/types';
 import './chart.css';
 
 const dateFormatter = timeFormatter('MMM DD');

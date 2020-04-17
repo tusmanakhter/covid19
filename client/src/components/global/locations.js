@@ -4,7 +4,7 @@ import LocationCard from './location-card';
 import { FixedSizeList as List } from 'react-window';
 import { EuiSearchBar, EuiSpacer, EuiSuperSelect, EuiHealth, EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { getColor } from '../../helpers/color';
+import { getColor, getTypesOptions, isPercent } from '../../helpers/types';
 import './locations.css';
 
 const optionDisplay = (value, display) => (
@@ -13,78 +13,7 @@ const optionDisplay = (value, display) => (
   </EuiHealth>
 );
 
-const options = [
-  {
-    value: 'name',
-    inputDisplay: optionDisplay('name',  'Name'),
-  },
-  {
-    value: 'confirmed',
-    inputDisplay: optionDisplay('confirmed',  'Confirmed'),
-  },
-  {
-    value: 'recovered',
-    inputDisplay: optionDisplay('recovered',  'Recovered'),
-  },
-  {
-    value: 'deaths',
-    inputDisplay: optionDisplay('deaths',  'Deaths'),
-  },
-  {
-    value: 'active',
-    inputDisplay: optionDisplay('active',  'Active'),
-  },
-  {
-    value: 'recoveredRate',
-    inputDisplay: optionDisplay('recoveredRate',  'Recovery Rate'),
-
-  },
-  {
-    value: 'deathsRate',
-    inputDisplay: optionDisplay('deathsRate',  'Death Rate'),
-  },
-  {
-    value: 'activeRate',
-    inputDisplay: optionDisplay('activeRate',  'Active Rate'),
-  },
-  {
-    value: 'perCapita',
-    inputDisplay: optionDisplay('perCapita',  'Per 100,000'),
-  },
-  {
-    value: 'confirmedIncrease',
-    inputDisplay: optionDisplay('confirmedIncrease',  'Confirmed Increase'),
-  },
-  {
-    value: 'recoveredIncrease',
-    inputDisplay: optionDisplay('recoveredIncrease',  'Recovered Increase'),
-  },
-  {
-    value: 'deathsIncrease',
-    inputDisplay: optionDisplay('deathsIncrease',  'Deaths Increase'),
-  },
-  {
-    value: 'activeIncrease',
-    inputDisplay: optionDisplay('activeIncrease',  'Active Increase'),
-  },
-  {
-    value: 'confirmedIncreasePercent',
-    inputDisplay: optionDisplay('confirmedIncreasePercent',  'Confirmed Increase (%)'),
-  },
-  {
-    value: 'recoveredIncreasePercent',
-    inputDisplay: optionDisplay('recoveredIncreasePercent',  'Recovered Increase (%)'),
-  },
-  {
-    value: 'deathsIncreasePercent',
-    inputDisplay: optionDisplay('deathsIncreasePercent',  'Deaths Increase (%)'),
-  },
-  {
-    value: 'activeIncreasePercent',
-    inputDisplay: optionDisplay('activeIncreasePercent',  'Active Increase (%)'),
-  },
-];
-
+const options = getTypesOptions(optionDisplay);
 const initialQuery = EuiSearchBar.Query.MATCH_ALL;
 
 const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, selected }) => {
@@ -147,7 +76,7 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
   }
   
   let isPercentage = false;
-  if (displayStat.includes('Rate') || displayStat.includes('Percent')) {
+  if (isPercent(displayStat)) {
     isPercentage = true;
   }
 

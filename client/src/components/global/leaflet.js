@@ -2,16 +2,16 @@ import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Map, CircleMarker, Popup, TileLayer } from 'react-leaflet'
 import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingChart } from '@elastic/eui';
-import { getColor } from '../../helpers/color';
+import { getColor, getLabel, isPercent } from '../../helpers/types';
 import './leaflet.css';
 
-const stat = (title, stat, type) => (
+const stat = (title, stat, type, isPercentage = false) => (
   <EuiFlexGroup responsive={false} gutterSize="none">
     <EuiFlexItem style={{marginRight: 16}}>
       <EuiText size="xs"><b>{title}: </b></EuiText>
     </EuiFlexItem>
     <EuiFlexItem grow={false}>
-      <EuiText className="map-popup" size="xs"><b style={{color: getColor(type)}}>{stat.toLocaleString()}</b></EuiText>
+      <EuiText className="map-popup" size="xs"><b style={{color: getColor(type)}}>{stat.toLocaleString()}{isPercentage && '%'}</b></EuiText>
     </EuiFlexItem>
   </EuiFlexGroup>
 )
@@ -41,15 +41,25 @@ const Leaflet = ({ data, selectedData, markerType }) => {
   }, []);
 
   let markers = null;
-  const color = getColor(markerType);
+
   if (data) {
+    const color = getColor(markerType);
+    const label = getLabel(markerType);
+    const isPercentage = isPercent(markerType);
+
+    const defaultDisplayStats = ['name', 'confirmed', 'active', 'recovered', 'deaths'];
+    const isDefaultStat = defaultDisplayStats.includes(markerType);
+
     markers = data.map(location => {
       const key = `${location.location.country}${location.location.province}`
       const coordinates = {lat: location.location.lat, lng: location.location.long};
       let value = location.latest[markerType];
       let radius;
-      if (markerType.includes('Rate') || markerType.includes('Percent')) {
-        radius = (value/100)*10;
+      if (isPercentage) {
+        if (value > 200) {
+          value = 200;
+        }
+        radius = (value >= 0 && !isNaN(value)) ? (value/10) : 0;
       } else {
         radius = (value >= 0 && !isNaN(value)) ? Math.log10(value)*3 : 0;
       }
@@ -73,6 +83,7 @@ const Leaflet = ({ data, selectedData, markerType }) => {
             {stat('Active', location.latest.active, 'active')}
             {stat('Recovered', location.latest.recovered, 'recovered')}
             {stat('Deaths', location.latest.deaths, 'deaths')}
+            {!isDefaultStat && stat(label, location.latest[markerType], markerType, isPercentage)}
           </Popup>
         </CircleMarker>
       )
