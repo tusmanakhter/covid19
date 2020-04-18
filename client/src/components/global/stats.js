@@ -32,15 +32,23 @@ const Stats = ({ data, onBack }) => {
       {
         data ? (
           <div>
-          {
-            data.location.province ? 
-              <>
-                <EuiText textAlign="center">
-                  <h4>{data.location.country}</h4>
-                  <h2 style={{ marginTop: 0 }}>{data.location.province}</h2>
-                </EuiText>
-              </> :
-              <EuiText textAlign="center"><h2>{data.location.country}</h2></EuiText>
+            <EuiFlexGroup responsive={false} gutterSize="s" alignItems="center" justifyContent="center">
+              {
+                data.location.country !== 'Global' && 
+                <EuiFlexItem grow={false}>
+                  <img src={`flags/${data.location.iso2}.svg`} alt={data.location.iso2} height="18" width="24" />
+                </EuiFlexItem>
+              }
+              <EuiFlexItem grow={false}>
+              {
+                data.location.province ? 
+                  <EuiText><h2 style={{ fontSize: '1.6rem', fontWeight: 400 }}>{data.location.province}</h2></EuiText> :
+                  <EuiText><h2 style={{ fontSize: '1.6rem', fontWeight: 400 }}>{data.location.country}</h2></EuiText>
+              }
+              </EuiFlexItem>
+            </EuiFlexGroup>
+            {
+              data.location.province && <EuiText textAlign="center"><h4>{data.location.country}</h4></EuiText>
             }
             <EuiSpacer size="s"/>
             <StatLine 

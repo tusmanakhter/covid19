@@ -93,7 +93,17 @@ const Chart = ({ title, data }) => {
             <EuiFlexItem grow={false}>
               <EuiFlexGroup justifyContent="spaceBetween" responsive={false}>
                 <EuiFlexItem grow={false}>
-                  <EuiTitle size="s"><h2>{title}</h2></EuiTitle>
+                  <EuiFlexGroup responsive={false} gutterSize="s" alignItems="center" justifyContent="center">
+                    {
+                      data.location.country !== 'Global' && 
+                      <EuiFlexItem grow={false}>
+                        <img src={`flags/${data.location.iso2}.svg`} alt={data.location.iso2} height="18" width="24" />
+                      </EuiFlexItem>
+                    }
+                    <EuiFlexItem grow={false}>
+                      <EuiTitle size="s"><h2>{title}</h2></EuiTitle>
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
                 </EuiFlexItem>
                 <EuiFlexItem grow={false}>
                   <EuiFlexGroup gutterSize="m" alignItems="center" responsive={false}>
