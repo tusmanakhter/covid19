@@ -1,9 +1,11 @@
 
 import got from "got";
+import countries from "i18n-iso-countries";
+import { getKey } from "../helpers/key";
 
 const baseUrl = "https://services9.arcgis.com/N9p5hsImWXAccRNI/arcgis/rest/services/Nc2JKvYFoAEOFCG5JSI6/FeatureServer";
-const countryUrl = `${baseUrl}/2/query?f=json&returnGeometry=false&where=Confirmed%20%3E%200&outFields=Country_Region,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths,Incident_Rate`;
-const provinceUrl = `${baseUrl}/3/query?f=json&where=Confirmed%20%3E%200%20AND%20Province_State%20IS%20NOT%20NULL&returnGeometry=false&outFields=Country_Region,Province_State,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths,Incident_Rate`;
+const countryUrl = `${baseUrl}/2/query?f=json&returnGeometry=false&where=Confirmed%20%3E%200&outFields=Country_Region,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths,Incident_Rate,ISO3`;
+const provinceUrl = `${baseUrl}/3/query?f=json&where=Confirmed%20%3E%200%20AND%20Province_State%20IS%20NOT%20NULL&returnGeometry=false&outFields=Country_Region,Province_State,Last_Update,Lat,Long_,Confirmed,Recovered,Deaths,Incident_Rate,ISO3`;
 
 const headers = {
   'authority': 'services9.arcgis.com',
@@ -26,6 +28,7 @@ enum Properties {
   Deaths = "Deaths",
   LastUpdate = "Last_Update",
   PerCapita = "Incident_Rate",
+  ISO3 = "ISO3",
 }
 
 const getLatestDict = async (url: string) => {
@@ -45,12 +48,24 @@ const getLatestDict = async (url: string) => {
     const active = confirmed - (recovered + deaths);
     const lastUpdate = record[Properties.LastUpdate];
     const perCapita = record[Properties.PerCapita] ?? 0;
+    const iso3 = record[Properties.ISO3];
+    let iso2 = countries.alpha3ToAlpha2(iso3) ?? 'XX';
 
-    let key: string;
-    if (province === "") {
-      key = country;
-    } else {
-      key = `${province}, ${country}`
+    // Handle Kosovo
+    if (iso3 === 'XKS') {
+      iso2 = 'XK';
+    }
+
+    const key = getKey(province, country);
+
+    // Handle Diamond Princess - Bermuda registered
+    if (key === 'Diamond Princess') {
+      iso2 = 'BM';
+    }
+
+    // Handle MS Zaandam - Netherlands registered
+    if (key === 'MS Zaandam') {
+      iso2 = 'NL';
     }
 
     const latestRecord = {
@@ -59,6 +74,7 @@ const getLatestDict = async (url: string) => {
         province,
         lat,
         long,
+        iso2,
       },
       latest: {
         confirmed,
@@ -81,7 +97,7 @@ const getLatest = async () => {
     getLatestDict(provinceUrl),
     getLatestDict(countryUrl)
   ]);
-  
+
   const latestCountryValues = Object.values(country);
   const global = latestCountryValues.reduce((a: any, b: any) => {
     return {

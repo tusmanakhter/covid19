@@ -1,8 +1,10 @@
 
 import got from "got";
 import parse from "csv-parse/lib/sync";
+import { getKey } from "../helpers/key";
 
-const baseUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_";
+const repo = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/"
+const baseUrl = `${repo}csse_covid_19_time_series/time_series_covid19_`;
 
 enum Properties {
   Country = "Country/Region",
@@ -15,6 +17,25 @@ enum Category {
   Confirmed = "confirmed",
   Recovered = "recovered",
   Deaths = "deaths"
+}
+
+const getIso2Dict = async () => {
+  const url = `${repo}UID_ISO_FIPS_LookUp_Table.csv`;
+  const response = await got(url).text();
+  const records = parse(response, {
+    columns: true,
+    skip_empty_lines: true
+  })
+
+  const dict = {}
+  records.forEach(record => {
+    const province = record['Province_State'];
+    const country = record['Country_Region'];
+    const iso2 = record['iso2'];
+    const key = getKey(province, country);
+    dict[key] = iso2;
+  })
+  return dict;
 }
 
 const getCategory = async (category: Category) => {
@@ -33,13 +54,7 @@ const getCategory = async (category: Category) => {
     const province = record[Properties.Province];
     const lat = parseFloat(record[Properties.Lat]);
     const long = parseFloat(record[Properties.Long]);
-
-    let key: string;
-    if (province === "") {
-      key = country;
-    } else {
-      key = `${province}, ${country}`
-    }
+    const key = getKey(province, country);
 
     const dateEntries = Object.entries<string>(record).slice(4);
 
@@ -67,7 +82,7 @@ const getCategory = async (category: Category) => {
   return data;
 }
 
-const mergeCategories = (confirmed: ILocationDict, recovered: ILocationDict, deaths: ILocationDict) => {
+const mergeCategories = (confirmed: ILocationDict, recovered: ILocationDict, deaths: ILocationDict, iso2Dict) => {
   const merged = {};
   updateMergedDict(merged, confirmed, 'confirmed');
   updateMergedDict(merged, recovered, 'recovered');
@@ -78,6 +93,22 @@ const mergeCategories = (confirmed: ILocationDict, recovered: ILocationDict, dea
     let locationData = null;
     if (confirmed[location] !== undefined) {
       locationData = confirmed[location].location;
+      const province = locationData.province;
+      const country = locationData.country;
+      const key = getKey(province, country);
+      let iso2 = iso2Dict[key];
+
+      // Handle Diamond Princess - UK registered
+      if (key === 'Diamond Princess') {
+        iso2 = 'BM';
+      }
+
+      // Handle MS Zaandam - Netherlands registered
+      if (key === 'MS Zaandam') {
+        iso2 = 'NL';
+      }
+
+      locationData.iso2 = iso2 ?? 'XX';
     }
     merged[location] = { location: locationData, history: dictToArray(value) }
   })
@@ -109,13 +140,14 @@ const dictToArray = (dictionary: IStatsDict) => {
 }
 
 const getAllCategories = async () => {
-  const [confirmed, recovered, deaths] = await Promise.all([
+  const [confirmed, recovered, deaths, iso2Dict] = await Promise.all([
     getCategory(Category.Confirmed),
     getCategory(Category.Recovered),
     getCategory(Category.Deaths),
+    getIso2Dict(),
   ]);
 
-  const merged = mergeCategories(confirmed, recovered, deaths);
+  const merged = mergeCategories(confirmed, recovered, deaths, iso2Dict);
   return merged;
 }
 

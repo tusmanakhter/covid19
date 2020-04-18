@@ -1,16 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { EuiPanel, EuiText, EuiBadge } from '@elastic/eui';
+import { EuiPanel, EuiText, EuiBadge, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
 
-const LocationCard = ({ locationKey, location, stat, onRowClick, isPercentage, position, color }) => (
-    <EuiPanel onClick={() => {onRowClick(locationKey)}}>
-      <EuiText  size="s">
-        <b>
-          {/* <span style={{ width: 32 }}><EuiBadge color={color} style={{ padding: '0 4px' }}>{position}</EuiBadge></span>  */}
-          {location}
-        </b>
-        <span style={{float: 'right'}}><b style={{ color: color }}>{stat.toLocaleString()}{isPercentage && '%'}</b></span>
-      </EuiText>
+const LocationCard = ({ locationKey, location, stat, onRowClick, isPercentage, position, color, countryCode }) => (
+    <EuiPanel onClick={() => {onRowClick(locationKey)}} style={{ backgroundColor: '#fbfcfd' }}>
+      <EuiFlexGroup gutterSize="s" responsive={false} alignItems="center">
+        <EuiFlexItem grow={false}>
+          <EuiText  size="s">
+            <EuiBadge color={color} style={{ padding: '0 4px', minWidth: 32, textAlign: 'center' }}>{position}</EuiBadge>
+          </EuiText>
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <img src={`flags/${countryCode}.svg`} alt={countryCode} height="18" width="24" />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <EuiText size="s">
+            <b>{location}</b>
+          </EuiText>
+        </EuiFlexItem>
+        <EuiFlexItem>
+          <EuiText  size="s" textAlign="right">
+            <b style={{ color: color }}>{stat.toLocaleString()}{isPercentage && '%'}</b>
+          </EuiText>
+        </EuiFlexItem>
+      </EuiFlexGroup>
     </EuiPanel>
 );
 
@@ -22,6 +35,7 @@ LocationCard.propTypes = {
   isPercentage:  PropTypes.bool,
   position: PropTypes.number,
   color: PropTypes.string,
+  countryCode: PropTypes.string,
 };
 
 LocationCard.defaultProps = {

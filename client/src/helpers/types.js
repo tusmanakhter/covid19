@@ -34,7 +34,7 @@ const types = {
   },
   'perCapita': {
     color: '#DD0A73',
-    label: 'Per 100,000',
+    label: 'Confirmed Per 100,000',
   },
   'confirmedIncrease': {
     color: '#6092C0',
@@ -67,6 +67,22 @@ const types = {
   'activeIncreasePercent': {
     color: '#D6BF57',
     label: 'Active Increase (%)',
+  },
+  'confirmedGlobalPercent': {
+    color: '#006BB4',
+    label: 'Confirmed of Global (%)',
+  },
+  'recoveredGlobalPercent': {
+    color: '#017D73',
+    label: 'Recovered of Global (%)',
+  },
+  'deathsGlobalPercent': {
+    color: '#BD271E',
+    label: 'Deaths of Global (%)',
+  },
+  'activeGlobalPercent': {
+    color: '#F5A700',
+    label: 'Active of Global (%)',
   },
 }
 

@@ -16,6 +16,14 @@ const stat = (title, stat, type, isPercentage = false) => (
   </EuiFlexGroup>
 )
 
+const onMouseOver = (e) => {
+  e.target.openPopup();
+}
+
+const onMouseOut = (e) => {
+  e.target.closePopup();
+}
+
 const Leaflet = ({ data, selectedData, markerType }) => {
   const [zoom, setZoom] = useState(2);
   const [position, setPosition] = useState([25, 10]);
@@ -65,19 +73,38 @@ const Leaflet = ({ data, selectedData, markerType }) => {
       }
 
       return (
-        <CircleMarker key={key} center={coordinates} radius={radius} stroke={false} color={color} fillOpacity={0.5}>
+        <CircleMarker 
+          key={key} 
+          center={coordinates} 
+          radius={radius} 
+          stroke={false} 
+          color={color} 
+          fillOpacity={0.5}
+          onMouseOver={onMouseOver}
+          onMouseOut={onMouseOut}
+          onFocus={onMouseOver}
+          onBlur={onMouseOut}
+        >
           <Popup autoClose>
-            {location.location.province ? 
-              <>
-              <EuiText size="s">
-                <dl>
-                  <dt>{location.location.province}</dt>
-                  <dd style={{fontSize: "0.9rem"}}>{location.location.country}</dd>
-                </dl>
-              </EuiText>
-              </> :
-              <EuiText size="s"><dl><dt>{location.location.country}</dt></dl></EuiText>
-            }
+            <EuiFlexGroup responsive={false} gutterSize="m" alignItems="center">
+              <EuiFlexItem>
+              {
+                location.location.province ? 
+                <>
+                <EuiText size="s">
+                  <dl>
+                    <dt>{location.location.province}</dt>
+                    <dd style={{fontSize: "0.9rem"}}>{location.location.country}</dd>
+                  </dl>
+                </EuiText>
+                </> :
+                <EuiText size="s"><dl><dt>{location.location.country}</dt></dl></EuiText>
+              }
+              </EuiFlexItem>
+              <EuiFlexItem grow={false}>
+                <img src={`flags/${location.location.iso2}.svg`} alt={location.location.iso2} height="18" width="24" />
+              </EuiFlexItem>
+            </EuiFlexGroup>
             <EuiHorizontalRule margin="xs" />
             {stat('Confirmed', location.latest.confirmed, 'confirmed')}
             {stat('Active', location.latest.active, 'active')}

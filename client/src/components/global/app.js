@@ -6,10 +6,10 @@ import Leaflet from './leaflet';
 import Chart from './chart';
 import ky from 'ky';
 import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
-import { getIncrease, getPercentTotal } from '../../helpers/stats';
+import { getIncrease, getPercentTotal, getGlobalPercent } from '../../helpers/stats';
 import './app.css';
 
-const addLatestStats = (location) => {
+const addLatestStats = (location, global) => {
   const confirmedIncrease = getIncrease('confirmed', location);
   const recoveredIncrease =  getIncrease('recovered', location);
   const deathsIncrease =  getIncrease('deaths', location);
@@ -21,7 +21,11 @@ const addLatestStats = (location) => {
   const recoveredRate = getPercentTotal('recovered', location);
   const deathsRate = getPercentTotal('deaths', location);
   const activeRate = getPercentTotal('active', location);
-
+  const confirmedGlobalPercent = getGlobalPercent('confirmed', location, global);
+  const recoveredGlobalPercent =  getGlobalPercent('recovered', location, global);
+  const deathsGlobalPercent =  getGlobalPercent('deaths', location, global);
+  const activeGlobalPercent =  getGlobalPercent('active', location, global);
+  
   const latest = {
     ...location.latest,
     confirmedIncrease,
@@ -35,6 +39,10 @@ const addLatestStats = (location) => {
     recoveredRate,
     deathsRate,
     activeRate,
+    confirmedGlobalPercent,
+    recoveredGlobalPercent,
+    deathsGlobalPercent,
+    activeGlobalPercent,
   }
 
   return latest;
@@ -54,13 +62,14 @@ const App = () => {
   useEffect(() => {
     (async () => {
       const data = await ky.get(`${process.env.API_URL}/api`).json();
+      const global = data.global;
 
       Object.entries(data.locations).forEach(([key, location]) => {
-        const latest = addLatestStats(location);
+        const latest = addLatestStats(location, global);
         data.locations[key].latest = latest;
       });
 
-      const latest = addLatestStats(data.global);
+      const latest = addLatestStats(global, global);
       data.global.latest = latest;
 
       const locationsArray = Object.entries(data.locations);

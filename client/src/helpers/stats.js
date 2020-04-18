@@ -29,4 +29,17 @@ const getPercentTotal = (stat, data) => {
   return parseFloat(percentage);
 }
 
-export { getIncrease, getPercentTotal};
+
+const getGlobalPercent = (stat, data, global) => {
+  const latest = data.latest[stat];
+  const globalLatest = global.latest[stat];
+  let percentage = ((latest/globalLatest)*100).toFixed(2);
+
+  if (!isFinite(percentage)) {
+    percentage = (0).toFixed(2);
+  }
+
+  return parseFloat(percentage);
+}
+
+export { getIncrease, getPercentTotal, getGlobalPercent};

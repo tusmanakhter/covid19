@@ -87,6 +87,7 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
     const key = item.key;
     const itemLocation = item.location[location];
     const itemStat = item.latest[displayStat];
+    const countryCode = item.location.iso2;
 
     return (
       <div style={{
@@ -103,6 +104,7 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
           position={index+1} 
           isPercentage={isPercentage}
           color={getColor(displayStat)}
+          countryCode={countryCode}
         />
       </div>
     )
