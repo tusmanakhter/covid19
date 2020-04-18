@@ -97,7 +97,7 @@ const Chart = ({ title, data }) => {
                     {
                       data.location.country !== 'Global' && 
                       <EuiFlexItem grow={false}>
-                        <img src={`flags/${data.location.iso2}.svg`} alt={data.location.iso2} height="18" width="24" />
+                        <img src={`/flags/${data.location.iso2.toLowerCase()}.svg`} alt={data.location.iso2} height="18" width="24" />
                       </EuiFlexItem>
                     }
                     <EuiFlexItem grow={false}>

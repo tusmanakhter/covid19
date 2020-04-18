@@ -102,7 +102,7 @@ const Leaflet = ({ data, selectedData, markerType }) => {
               }
               </EuiFlexItem>
               <EuiFlexItem grow={false}>
-                <img src={`flags/${location.location.iso2}.svg`} alt={location.location.iso2} height="18" width="24" />
+                <img src={`/flags/${location.location.iso2.toLowerCase()}.svg`} alt={location.location.iso2} height="18" width="24" />
               </EuiFlexItem>
             </EuiFlexGroup>
             <EuiHorizontalRule margin="xs" />

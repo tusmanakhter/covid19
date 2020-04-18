@@ -11,7 +11,7 @@ const LocationCard = ({ locationKey, location, stat, onRowClick, isPercentage, p
           </EuiText>
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <img src={`flags/${countryCode}.svg`} alt={countryCode} height="18" width="24" />
+          <img src={`/flags/${countryCode.toLowerCase()}.svg`} alt={countryCode} height="18" width="24" />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
           <EuiText size="s">
