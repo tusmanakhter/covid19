@@ -7,7 +7,7 @@
   "dependencies": {
     "@elastic/charts": "^18.2.0",
     "@elastic/datemath": "^5.0.2",
-    "@elastic/eui": "^22.5.0",
+    "@elastic/eui": "^23.1.0",
     "dotenv": "^8.2.0",
     "gatsby": "^2.19.45",
     "gatsby-image": "^2.2.44",

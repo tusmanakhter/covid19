@@ -42,7 +42,6 @@ const Layout = ({ children, global }) => {
                 >
                   About
                 </Link>
-                <OutboundLink href='https://ko-fi.com/P5P21KE6M' target='_blank' rel="noopener noreferrer"><img style={{border: 0, height: 36, margin: '2px 8px'}} src='https://cdn.ko-fi.com/cdn/kofi1.png?v=2' alt='Buy Me a Coffee at ko-fi.com' /></OutboundLink>
               </EuiHeaderLinks>
             )
           }

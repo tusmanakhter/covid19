@@ -21,13 +21,11 @@ body {
 .page {
   min-height: 100%;
   padding: 8px;
-  padding-top: 0px;
 }
 
 @media only screen and (max-width: 767px) {
   .page {
     padding: 4px;
-    padding-top: 0px;
   }
 }
 
@@ -41,18 +39,6 @@ body {
 
 .header .euiHeaderLink {
   padding: 0 16px;
-}
-
-.header .euiHeaderLinks__list {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@media only screen and (max-width: 767px) {
-  .header .euiHeaderLinks__list {
-    display: none;
-  }
 }
 
 ::-webkit-scrollbar {
