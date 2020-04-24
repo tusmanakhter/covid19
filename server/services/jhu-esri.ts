@@ -117,18 +117,20 @@ const getLatest = async () => {
 }
 
 
-const getQuebecCases = async () => {
-  const url = `${baseUrl}/3/query?f=json&returnGeometry=false&where=Province_State%20%3D%20%27Quebec%27&outFields=Confirmed`
+const getQuebecStats = async () => {
+  const url = `${baseUrl}/3/query?f=json&returnGeometry=false&where=Province_State%20%3D%20%27Quebec%27&outFields=Confirmed,Deaths`
   const response: any = await got(url, {headers}).json();
   const confirmed = response.features[0].attributes.Confirmed;
-  return confirmed;
+  const deaths = response.features[0].attributes.Deaths;
+  return { confirmed, deaths };
 }
 
-const getCanadaCases = async () => {
-  const url = `${baseUrl}/2/query?f=json&returnGeometry=false&where=Country_Region%20%3D%20%27Canada%27&outFields=Confirmed`
+const getCanadaStats = async () => {
+  const url = `${baseUrl}/2/query?f=json&returnGeometry=false&where=Country_Region%20%3D%20%27Canada%27&outFields=Confirmed,Deaths`
   const response: any = await got(url, {headers}).json();
   const confirmed = response.features[0].attributes.Confirmed;
-  return confirmed;
+  const deaths = response.features[0].attributes.Deaths;
+  return { confirmed, deaths };
 }
 
-export { getLatest, getQuebecCases, getCanadaCases };
+export { getLatest, getQuebecStats, getCanadaStats };

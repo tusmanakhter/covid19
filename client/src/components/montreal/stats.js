@@ -30,13 +30,29 @@ const Stat = ({ stats }) => {
                     <EuiStat title={stats.confirmed.toLocaleString()} description="Confirmed" titleSize="m" textAlign="center" titleColor="secondary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
-                    <EuiStat title={stats.perHundred.toLocaleString()} description="Per Capita" titleSize="m" textAlign="center" titleColor="secondary" reverse />
+                    <EuiStat title={stats.perHundred.toLocaleString()} description="Confirmed Per Capita" titleSize="m" textAlign="center" titleColor="secondary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
                     <EuiStat title={`${((stats.confirmed/stats.quebecCases)*100).toFixed(2)}%`} description="of Quebec's cases" titleSize="m" textAlign="center" titleColor="primary" reverse />
                   </EuiFlexItem>
                   <EuiFlexItem>
                     <EuiStat title={`${((stats.confirmed/stats.canadaCases)*100).toFixed(2)}%`} description="of Canada's cases" titleSize="m" textAlign="center" titleColor="danger" reverse />
+                  </EuiFlexItem>
+                </EuiFlexGroup>
+              </EuiFlexItem>
+              <EuiFlexItem>
+                <EuiFlexGroup>
+                  <EuiFlexItem>
+                    <EuiStat title={stats.deaths.toLocaleString()} description="Deaths" titleSize="m" textAlign="center" titleColor="secondary" reverse />
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <EuiStat title={stats.perHundredDeaths.toLocaleString()} description="Deaths Per Capita" titleSize="m" textAlign="center" titleColor="secondary" reverse />
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <EuiStat title={`${((stats.deaths/stats.quebecDeaths)*100).toFixed(2)}%`} description="of Quebec's deaths" titleSize="m" textAlign="center" titleColor="primary" reverse />
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <EuiStat title={`${((stats.deaths/stats.canadaDeaths)*100).toFixed(2)}%`} description="of Canada's deaths" titleSize="m" textAlign="center" titleColor="danger" reverse />
                   </EuiFlexItem>
                 </EuiFlexGroup>
               </EuiFlexItem>

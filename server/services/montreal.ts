@@ -1,5 +1,4 @@
-import { getQuebecCases } from "./jhu-esri";
-import { getCanadaCases } from "../helpers/cases";
+import { getCanadaStats, getQuebecStats } from "../helpers/stats";
 import  { getMontrealData, getMontrealAgeData } from "../services/sante-montreal";
 import  { getDateData } from "../services/quebec";
 import cache from "../helpers/cache";
@@ -7,26 +6,13 @@ import cache from "../helpers/cache";
 const getData = async () => {
   let montrealData: any = cache.get("montreal");
   if ( montrealData === undefined ) {
-    let quebecCases = cache.get("quebecCases");
-    if ( quebecCases === undefined ) {
-      const quebecCasesJHU = await getQuebecCases();
-      const quebecCAData: any = await getDateData();
-      const quebecCasesCA = quebecCAData.pop().confirmed;
+    const quebecStats = await getQuebecStats();
+    const canadaStats = await getCanadaStats();
 
-      if (quebecCasesJHU !== undefined && quebecCasesCA !== undefined) {
-        quebecCases = Math.max(quebecCasesCA, quebecCasesJHU);
-      } else if (quebecCasesJHU === undefined) {
-        quebecCases = quebecCasesCA;
-      } else if (quebecCasesCA === undefined) {
-        quebecCases = quebecCasesJHU;
-      } else {
-        quebecCases = 0;
-      }
-
-      cache.set("quebecCases", quebecCases, 60);
-    }
-
-    const canadaCases = await getCanadaCases();
+    const quebecCases = quebecStats.cases;
+    const canadaCases = canadaStats.cases;
+    const quebecDeaths = quebecStats.deaths;
+    const canadaDeaths = canadaStats.deaths;
 
     let montrealRegionData: any = cache.get("montrealRegionData");
     if ( montrealRegionData === undefined ) {
@@ -40,9 +26,14 @@ const getData = async () => {
       cache.set("montrealAgeData", montrealAgeData, 600);
     }
 
+    const perHundredDeaths = parseFloat(((montrealRegionData.deaths/2065499)*100000).toFixed(1));
+
     montrealData = {
       quebecCases,
       canadaCases,
+      quebecDeaths,
+      canadaDeaths,
+      perHundredDeaths,
       ...montrealRegionData,
       ages: montrealAgeData,
     };

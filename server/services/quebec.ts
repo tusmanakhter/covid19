@@ -3,7 +3,7 @@ import got from 'got';
 import cache from "../helpers/cache";
 import parse from "csv-parse/lib/sync";
 import { Options } from "csv-parse";
-import { getCanadaCases } from "../helpers/cases";
+import { getCanadaStats } from "../helpers/stats";
 import dayjs from "dayjs";
 import 'dayjs/locale/fr-ca'
 import customParseFormat from "dayjs/plugin/customParseFormat"
@@ -189,7 +189,7 @@ const getQuebecData = async () => {
   const byAge = ageData;
   const lastAnalysis = date.slice(-1).pop();
 
-  const canadaCases = await getCanadaCases();
+  const canadaCases = (await getCanadaStats()).cases;
 
   other.summary.negative = lastAnalysis.negative;
   other.summary.totalTests = lastAnalysis.negative + lastAnalysis.positive;

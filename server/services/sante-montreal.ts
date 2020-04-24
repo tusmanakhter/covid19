@@ -46,9 +46,12 @@ const getMontrealData = async () => {
     lastUpdate = dayjs(time, 'DD MMMM YYYY HH ZZ', 'fr-ca');
   }
 
+  const deaths = getDeaths(response);
+
   const montrealData = {
     confirmed: total.confirmed,
     perHundred: total.perHundred,
+    deaths,
     lastUpdate,
     locations: neighbourhoodData
   }
@@ -75,6 +78,13 @@ const getMontrealAgeData = async () => {
   ageData.pop();
 
   return ageData;
+}
+
+const getDeaths = (response) => {
+  const html = cheerio.load(response);
+  const header = html("td h4:contains('Deaths')")
+  const deaths = parseInt(header.next().text());
+  return deaths;
 }
 
 export { getMontrealData, getMontrealAgeData };

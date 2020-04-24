@@ -42,6 +42,10 @@ const App = () => {
         perHundred: data.perHundred,
         quebecCases: data.quebecCases,
         canadaCases: data.canadaCases,
+        deaths: data.deaths, 
+        perHundredDeaths: data.perHundredDeaths,
+        quebecDeaths: data.quebecDeaths,
+        canadaDeaths: data.canadaDeaths,
         lastUpdate: data.lastUpdate,
       });
     })();
