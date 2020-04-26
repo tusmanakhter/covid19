@@ -16,7 +16,7 @@ const optionDisplay = (value, display) => (
 const allOptions = getTypesOptions(optionDisplay);
 const initialQuery = EuiSearchBar.Query.MATCH_ALL;
 
-const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, selected, historical, dateIndex }) => {
+const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, selected, historical }) => {
   const [descend, setDescend] = useState(false);
   const [query, setQuery] = useState(initialQuery);
   const [sort, setSort] = useState('confirmed');
@@ -191,7 +191,6 @@ Locations.propTypes = {
   setDisplayStat: PropTypes.func,
   selected: PropTypes.string,
   historical: PropTypes.bool,
-  dateIndex: PropTypes.number,
 }
 
 export default Locations;

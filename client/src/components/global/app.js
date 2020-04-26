@@ -6,7 +6,7 @@ import Leaflet from './leaflet';
 import Chart from './chart';
 import DatePicker from './date-picker';
 import ky from 'ky';
-import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiSpacer } from '@elastic/eui';
+import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
 import { addLatestStats, getCountryData, getProvinceData } from '../../helpers/stats';
 import './app.css';
 
@@ -115,8 +115,7 @@ const App = () => {
               <Stats data={selectedData} onBack={resetSelected} />
               <EuiHorizontalRule margin="s"/>
               <DatePicker setDisplayDate={setDisplayDate} data={data} />
-              <EuiSpacer size="m"/>
-              <Locations 
+              <Locations
                 data={tableData} 
                 onRowClick={selectRow} 
                 isProvince={isProvince} 
@@ -124,7 +123,6 @@ const App = () => {
                 setDisplayStat={setDisplayStat} 
                 selected={selected}
                 historical={historical}
-                dateIndex={dateIndex}
               />
             </EuiPanel>
           </EuiFlexItem>
