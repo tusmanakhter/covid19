@@ -114,7 +114,7 @@ const App = () => {
             <EuiPanel className="leftBar">
               <Stats data={selectedData} onBack={resetSelected} />
               <EuiHorizontalRule margin="s"/>
-              <DatePicker setDisplayDate={setDisplayDate} />
+              <DatePicker setDisplayDate={setDisplayDate} data={data} />
               <EuiSpacer size="m"/>
               <Locations 
                 data={tableData} 

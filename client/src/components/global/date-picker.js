@@ -1,14 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { EuiDatePicker } from '@elastic/eui';
+import { EuiDatePicker, EuiRange } from '@elastic/eui';
+import { useDebounce } from 'use-debounce';
 import moment from 'moment';
 
-const DatePicker = ({ setDisplayDate }) => {
-  const minDate = moment("1/22/2020");
-  const maxDate = moment();
-  const [selectedDate, setSelectedDate] = useState(maxDate);
+const getDates = () => {
+  const start = moment("1/22/2020").utc();
+  const end = moment.utc();
 
+  const days = []
+  let current = start;
+  while (current.isSameOrBefore(end)) {
+    days.push(current);
+    current = current.clone().add(1, 'days');
+  }
+  return days;
+}
+
+const dates = getDates();
+const max = dates.length - 1;
+
+const DatePicker = ({ setDisplayDate, data }) => {
+  const minDate = moment("1/22/2020");
+  const maxDate = moment().utc();
+  const [selectedDate, setSelectedDate] = useState(maxDate);
+  const [value, setValue] = useState(max);
+  const [debouncedSelectedDate] = useDebounce(selectedDate, 150)
+  
   const handleChange = date => {
+    const dateIndex = dates.findIndex(day =>  day.isSame(date, 'day'));
+
     if (date.isBefore(minDate)) {
       date = moment(minDate)
     }
@@ -19,15 +40,32 @@ const DatePicker = ({ setDisplayDate }) => {
 
     setSelectedDate(date);
     setDisplayDate(date);
+    setValue(dateIndex);
   };
 
+  const onChange = e => {
+    const dateIndex = e.target.value;
+    setValue(dateIndex);
+    setSelectedDate(dates[dateIndex]);
+  };
+
+  useEffect(() => {
+    if (data) {
+      setDisplayDate(debouncedSelectedDate);
+    }
+  }, [debouncedSelectedDate, data, setDisplayDate]);
+
   return (
-    <EuiDatePicker selected={selectedDate} minDate={minDate} maxDate={maxDate} onChange={handleChange} fullWidth/>
+    <>
+      <EuiDatePicker selected={selectedDate} minDate={minDate} maxDate={maxDate} onChange={handleChange} fullWidth />
+      <EuiRange min={0} max={max} value={value} showRange onChange={onChange} fullWidth compressed />
+    </>
   )
 }
 
 DatePicker.propTypes = {
   setDisplayDate: PropTypes.func,
+  data: PropTypes.object,
 }
 
 export default DatePicker;
