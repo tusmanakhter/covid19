@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react'
+import React, { useState, useEffect, createRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import LocationCard from './location-card';
 import { FixedSizeList as List } from 'react-window';
@@ -13,16 +13,17 @@ const optionDisplay = (value, display) => (
   </EuiHealth>
 );
 
-const options = getTypesOptions(optionDisplay);
+const allOptions = getTypesOptions(optionDisplay);
 const initialQuery = EuiSearchBar.Query.MATCH_ALL;
 
-const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, selected }) => {
+const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, selected, historical, dateIndex }) => {
   const [descend, setDescend] = useState(false);
   const [query, setQuery] = useState(initialQuery);
   const [sort, setSort] = useState('confirmed');
   const listRef = createRef();
+  let options = allOptions;
 
-  const setSelected = (option) => {
+  const setSelected = useCallback((option) => {
     if (option === 'name') {
       setSelected('confirmed');
     } else {
@@ -30,7 +31,19 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
     }
     setSort(option);
     listRef.current.scrollToItem(0);
+  }, [listRef, setDisplayStat]);
+
+  if (historical) {
+    options = allOptions.filter(item => item.value !== 'perCapita');
+  } else {
+    options = allOptions;
   }
+
+  useEffect(() => {
+    if (historical && displayStat === 'perCapita') {
+      setSelected('confirmed');
+    }
+  }, [displayStat, historical, setSelected]);
 
   const invertSort = () => {
     setDescend(!descend);
@@ -40,6 +53,12 @@ const Locations = ({ data, onRowClick, isProvince, displayStat, setDisplayStat, 
   useEffect(() => {
     setQuery(initialQuery);
   }, [selected]);
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollToItem(0);
+    }
+  }, [listRef]);
 
   let location;
   if (isProvince) {
@@ -171,6 +190,8 @@ Locations.propTypes = {
   displayStat: PropTypes.string,
   setDisplayStat: PropTypes.func,
   selected: PropTypes.string,
+  historical: PropTypes.bool,
+  dateIndex: PropTypes.number,
 }
 
 export default Locations;

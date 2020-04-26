@@ -19,7 +19,7 @@ import './chart.css';
 const dateFormatter = timeFormatter('MMM DD');
 const numberFormatter = (value) => value.toLocaleString();
 
-const Chart = ({ title, data }) => {
+const Chart = ({ title, data, dateIndex }) => {
   const [logScale, setLogScale] = useState(false);
   const [history, setHistory] = useState();
   const [daily, setDaily] = useState(false);
@@ -40,16 +40,7 @@ const Chart = ({ title, data }) => {
 
   useEffect(() => {
     if (data) {
-      const dataHistory = [...data.history];
-      const date = (new Date()).setHours(0,0,0,0);
-      const latest = {
-        date,
-        confirmed: data.latest.confirmed,
-        recovered: data.latest.recovered,
-        deaths: data.latest.deaths,
-        active: data.latest.active,
-      }
-      dataHistory.push(latest);
+      const dataHistory = data.history.slice(0, dateIndex + 1);
 
       if (daily) {
         const dailyHistory = dataHistory.map((item, index) => {
@@ -78,12 +69,7 @@ const Chart = ({ title, data }) => {
         setHistory(dataHistory);
       }
     }
-  }, [data, daily]);
-
-  useEffect(() => {
-    if (data) {
-    }
-  }, [data]);
+  }, [data, daily, dateIndex]);
 
   return (
     <>
@@ -228,6 +214,7 @@ const Chart = ({ title, data }) => {
 Chart.propTypes = {
   data: PropTypes.object,
   title: PropTypes.string,
+  dateIndex: PropTypes.number,
 }
 
 export default Chart;

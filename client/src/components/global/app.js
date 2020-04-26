@@ -4,49 +4,25 @@ import Locations from './locations';
 import Stats from './stats';
 import Leaflet from './leaflet';
 import Chart from './chart';
+import DatePicker from './date-picker';
 import ky from 'ky';
-import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
-import { getIncrease, getPercentTotal, getGlobalPercent } from '../../helpers/stats';
+import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiSpacer } from '@elastic/eui';
+import { addLatestStats, getCountryData, getProvinceData } from '../../helpers/stats';
 import './app.css';
 
-const addLatestStats = (location, global) => {
-  const confirmedIncrease = getIncrease('confirmed', location);
-  const recoveredIncrease =  getIncrease('recovered', location);
-  const deathsIncrease =  getIncrease('deaths', location);
-  const activeIncrease =  getIncrease('active', location);
-  const confirmedIncreasePercent = getIncrease('confirmed', location, true);
-  const recoveredIncreasePercent = getIncrease('recovered', location, true);
-  const deathsIncreasePercent = getIncrease('deaths', location, true); 
-  const activeIncreasePercent = getIncrease('active', location, true);
-  const recoveredRate = getPercentTotal('recovered', location);
-  const deathsRate = getPercentTotal('deaths', location);
-  const activeRate = getPercentTotal('active', location);
-  const confirmedGlobalPercent = getGlobalPercent('confirmed', location, global);
-  const recoveredGlobalPercent =  getGlobalPercent('recovered', location, global);
-  const deathsGlobalPercent =  getGlobalPercent('deaths', location, global);
-  const activeGlobalPercent =  getGlobalPercent('active', location, global);
-  
-  const latest = {
-    ...location.latest,
-    confirmedIncrease,
-    recoveredIncrease,
-    deathsIncrease,
-    activeIncrease,
-    confirmedIncreasePercent,
-    recoveredIncreasePercent,
-    deathsIncreasePercent,
-    activeIncreasePercent,
-    recoveredRate,
-    deathsRate,
-    activeRate,
-    confirmedGlobalPercent,
-    recoveredGlobalPercent,
-    deathsGlobalPercent,
-    activeGlobalPercent,
-  }
+const addAllLatestStats = (data, dateIndex) => {
+  if (data) {
+    const global = data.global;
 
-  return latest;
-}
+    Object.entries(data.locations).forEach(([key, location]) => {
+      const latest = addLatestStats(location, global, dateIndex);
+      data.locations[key].latest = latest;
+    });
+
+    const latest = addLatestStats(global, global, dateIndex);
+    data.global.latest = latest;
+  }
+};
 
 const App = () => {
   const [data, setData] = useState();
@@ -58,61 +34,34 @@ const App = () => {
   const [mapData, setMapData] = useState();
   const [isProvince, setIsProvince] = useState(false);
   const [displayStat, setDisplayStat] = useState('confirmed');
+  const [dateIndex, setDateIndex] = useState();
+  const [historical, setHistorical] = useState(false);
+
+  const setCurrentData = useCallback((data, dateIndex) => {
+    addAllLatestStats(data, dateIndex);
+
+    const locationsValues = Object.values(data.locations).filter(location => location.location);
+
+    const countryData = getCountryData(data);
+    const provinceData = getProvinceData(data);
+
+    setMapData(locationsValues);
+    setCountryData(countryData);
+    setProvinceData(provinceData);
+    setTableData(countryData);
+  }, []);
 
   useEffect(() => {
     (async () => {
       const data = await ky.get(`${process.env.API_URL}/api`).json();
-      const global = data.global;
-
-      Object.entries(data.locations).forEach(([key, location]) => {
-        const latest = addLatestStats(location, global);
-        data.locations[key].latest = latest;
-      });
-
-      const latest = addLatestStats(global, global);
-      data.global.latest = latest;
-
-      const locationsArray = Object.entries(data.locations);
-      const locationsValues = Object.values(data.locations).filter(location => location.location);
- 
-      const countryData = locationsArray.map(([key, value]) => {
-        return {
-          key,
-          ...value
-        }
-      })
-      .filter(location => location.location && location.location.province === '')
-      .sort((a, b) => {
-        return b.latest.confirmed - a.latest.confirmed;
-      });
-
-      const provinceData = {};
-      locationsArray.map(([key, value]) => {
-        return {
-          key,
-          ...value
-        }
-      })
-      .filter(location => location.location && location.location.province !== '')
-      .sort((a, b) => {
-        return b.latest.confirmed - a.latest.confirmed;
-      })
-      .forEach(location => {
-        if (provinceData[location.location.country] === undefined) {
-          provinceData[location.location.country] = [];
-        }
-        provinceData[location.location.country].push(location)
-      });
-
-      setMapData(locationsValues);
+      const dateIndex = data.global.history.length - 1;
+      setCurrentData(data, dateIndex);
       setSelected('Global');
       setSelectedData(data.global);
-      setCountryData(countryData);
-      setProvinceData(provinceData);
-      setTableData(countryData);
+      setDateIndex(dateIndex);
       setData(data);
     })();
-  }, []);
+  }, [setCurrentData]);
 
   const selectRow = useCallback((selectedRow) => {
     setSelected(selectedRow);
@@ -122,6 +71,29 @@ const App = () => {
       setIsProvince(true);
     }
   }, [data, provinceData]);
+
+  const setDisplayDate = useCallback((date) => {
+    const formattedDate = date.format('M/D/YY');
+    const newData = {
+      locations: {}
+    };
+
+    newData.global = data.global;
+    const index = data.global.history.findIndex(histData => histData.date === formattedDate);
+    newData.global.latest = data.global.history[index];
+    setDateIndex(index);
+
+    Object.entries(data.locations).forEach(([key, location]) => {
+      const latest = location.history[index];
+      newData.locations[key] = location;
+      newData.locations[key].latest = latest;
+    });
+  
+    const historical = index !== data.global.history.length - 1;
+
+    setCurrentData(newData, index);
+    setHistorical(historical);
+  }, [data, setCurrentData]);
 
   const resetSelected = useCallback((key) => {
     if (key === 'Global') {
@@ -140,9 +112,20 @@ const App = () => {
         <EuiFlexGroup gutterSize="s">
           <EuiFlexItem grow={false}>
             <EuiPanel className="leftBar">
-              <Stats data={selectedData} onBack={resetSelected}/>
+              <Stats data={selectedData} onBack={resetSelected} />
               <EuiHorizontalRule margin="s"/>
-              <Locations data={tableData} onRowClick={selectRow} isProvince={isProvince} displayStat={displayStat} setDisplayStat={setDisplayStat} selected={selected}/>
+              <DatePicker setDisplayDate={setDisplayDate} />
+              <EuiSpacer size="m"/>
+              <Locations 
+                data={tableData} 
+                onRowClick={selectRow} 
+                isProvince={isProvince} 
+                displayStat={displayStat} 
+                setDisplayStat={setDisplayStat} 
+                selected={selected}
+                historical={historical}
+                dateIndex={dateIndex}
+              />
             </EuiPanel>
           </EuiFlexItem>
           <EuiFlexItem>
@@ -154,7 +137,7 @@ const App = () => {
               </EuiFlexItem>
               <EuiFlexItem grow={3}>
                 <EuiPanel style={{ height: '100%', paddingBottom: 0 }}>
-                  <Chart title={selected} data={selectedData} />
+                  <Chart title={selected} data={selectedData} dateIndex={dateIndex} />
                 </EuiPanel>
               </EuiFlexItem>
             </EuiFlexGroup>

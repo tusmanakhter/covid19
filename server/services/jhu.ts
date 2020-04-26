@@ -1,6 +1,9 @@
 import { getLatest } from "./jhu-esri";
 import { getAllCategories } from "./jsu-github";
 import cache from "../helpers/cache";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 const getAll = async () => {
   let finalData: any = cache.get("all");
@@ -44,6 +47,13 @@ const getAll = async () => {
         ...historyData,
         ...latestData
       }
+
+      const date = dayjs.utc().format("M/D/YY");
+      const latestHistoryItem = {
+        date,
+        ...latestData.latest,
+      }
+      result.history.push(latestHistoryItem);
 
       if (key === "global") {
         const global = {
