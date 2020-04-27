@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { EuiDatePicker, EuiRange } from '@elastic/eui';
 import { useDebounce } from 'use-debounce';
-import moment from 'moment';
+import moment from 'moment-timezone';
+
+const today = moment.tz('Etc/GMT').format("M/D/YY");
+const todayMoment = moment(today);
 
 const getDates = () => {
-  const start = moment("1/22/2020").utc();
-  const end = moment.utc();
+  const start = moment("1/22/2020");
+  const end = todayMoment;
 
   const days = []
   let current = start;
@@ -22,7 +25,8 @@ const max = dates.length - 1;
 
 const DatePicker = ({ setDisplayDate, data }) => {
   const minDate = moment("1/22/2020");
-  const maxDate = moment().utc();
+  const maxDate = todayMoment;
+
   const [selectedDate, setSelectedDate] = useState(maxDate);
   const [value, setValue] = useState(max);
   const [debouncedSelectedDate] = useDebounce(selectedDate, 150)
@@ -56,10 +60,10 @@ const DatePicker = ({ setDisplayDate, data }) => {
   }, [debouncedSelectedDate, data, setDisplayDate]);
 
   return (
-    <>
+    <div>
       <EuiDatePicker selected={selectedDate} minDate={minDate} maxDate={maxDate} onChange={handleChange} fullWidth />
       <EuiRange min={0} max={max} value={value} showRange onChange={onChange} fullWidth compressed />
-    </>
+    </div>
   )
 }
 

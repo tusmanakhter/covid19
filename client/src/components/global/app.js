@@ -80,19 +80,21 @@ const App = () => {
 
     newData.global = data.global;
     const index = data.global.history.findIndex(histData => histData.date === formattedDate);
-    newData.global.latest = data.global.history[index];
-    setDateIndex(index);
-
-    Object.entries(data.locations).forEach(([key, location]) => {
-      const latest = location.history[index];
-      newData.locations[key] = location;
-      newData.locations[key].latest = latest;
-    });
+    if (index !== -1) {
+      newData.global.latest = data.global.history[index];
+      setDateIndex(index);
   
-    const historical = index !== data.global.history.length - 1;
-
-    setCurrentData(newData, index);
-    setHistorical(historical);
+      Object.entries(data.locations).forEach(([key, location]) => {
+        const latest = location.history[index];
+        newData.locations[key] = location;
+        newData.locations[key].latest = latest;
+      });
+    
+      const historical = index !== data.global.history.length - 1;
+  
+      setCurrentData(newData, index);
+      setHistorical(historical);
+    }
   }, [data, setCurrentData]);
 
   const resetSelected = useCallback((key) => {
