@@ -83,7 +83,7 @@ const getMontrealAgeData = async () => {
 const getDeaths = (response) => {
   const html = cheerio.load(response);
   const header = html("td h4:contains('Deaths')")
-  const deaths = parseInt(header.next().text());
+  const deaths = parseInt(header.next().text().replace(/,/g, ''));
   return deaths;
 }
 
