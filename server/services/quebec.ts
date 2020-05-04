@@ -79,7 +79,7 @@ const getSummaryRowData = (entries: any) => {
   const intensive = normalizeInteger(entry.soins);
   const recovered = normalizeInteger(entry.gueris);
   const investigation = normalizeInteger(entry.invest);
-  const date = dayjs(entry.date, "DD MMMM YYYY - HH", 'fr-ca').add(4, 'hour');
+  const date = dayjs(entry.date, "D MMMM YYYY - HH", 'fr-ca').add(4, 'hour');
 
   const summary = {
     cases,
