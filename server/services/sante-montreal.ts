@@ -20,12 +20,16 @@ const getMontrealData = async () => {
       location = 'Territory to be confirmed';
     }
     const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
-    const confirmed = parseInt(confirmedString.replace(/,|<|\s/g, ''), 10);
+    const confirmed = sanitizeStat(confirmedString);
     const distributionString = html(element).find('td:nth-of-type(3)').text();
     const distribution = parseFloat(distributionString.replace(/\s|-/g, '0'));
     const perHundredString = html(element).find('td:nth-of-type(4)').text();
-    const perHundred = parseFloat(perHundredString.replace(/n\.p\.|\*|-/g, '0').replace(/,|\s/g, ''));
-    return { location, confirmed, distribution, perHundred }
+    const perHundred = sanitizePerHundred(perHundredString);
+    const deathsString = html(element).find('td:nth-of-type(5)').text().trim();
+    const deaths = sanitizeStat(deathsString);
+    const perHundredDeathsString = html(element).find('td:nth-of-type(6)').text().trim();
+    const perHundredDeaths = sanitizePerHundred(perHundredDeathsString);
+    return { location, confirmed, distribution, perHundred, deaths, perHundredDeaths }
   }).get();
   const total = neighbourhoodData.pop();
   neighbourhoodData.sort((a, b) => b.confirmed - a.confirmed);
@@ -46,12 +50,11 @@ const getMontrealData = async () => {
     lastUpdate = dayjs(time, 'DD MMMM YYYY HH ZZ', 'fr-ca');
   }
 
-  const deaths = getDeaths(response);
-
   const montrealData = {
     confirmed: total.confirmed,
     perHundred: total.perHundred,
-    deaths,
+    deaths: total.deaths,
+    perHundredDeaths: total.perHundredDeaths,
     lastUpdate,
     locations: neighbourhoodData
   }
@@ -80,11 +83,12 @@ const getMontrealAgeData = async () => {
   return ageData;
 }
 
-const getDeaths = (response) => {
-  const html = cheerio.load(response);
-  const header = html("td h4:contains('Deaths')")
-  const deaths = parseInt(header.next().text().replace(/,/g, ''));
-  return deaths;
+const sanitizePerHundred = (perHundred: string) => {
+  return parseFloat(perHundred.replace(/n\.p\.|\*|-/g, '0').replace(/,|\s/g, ''));
+}
+
+const sanitizeStat = (stat: string) => {
+  return parseInt(stat.replace(/,|<|\s/g, ''), 10);
 }
 
 export { getMontrealData, getMontrealAgeData };

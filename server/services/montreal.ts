@@ -26,14 +26,11 @@ const getData = async () => {
       cache.set("montrealAgeData", montrealAgeData, 600);
     }
 
-    const perHundredDeaths = parseFloat(((montrealRegionData.deaths/2065499)*100000).toFixed(1));
-
     montrealData = {
       quebecCases,
       canadaCases,
       quebecDeaths,
       canadaDeaths,
-      perHundredDeaths,
       ...montrealRegionData,
       ages: montrealAgeData,
     };

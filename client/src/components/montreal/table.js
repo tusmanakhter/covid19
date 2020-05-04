@@ -8,6 +8,7 @@ const columns = [
     name: 'Borrough/Linked City',
     field: 'location',
     sortable: true,
+    width: '30%',
   },
   {
     name: 'Confirmed',
@@ -15,15 +16,27 @@ const columns = [
     sortable: true,
     dataType: 'number',
     render: (value) => value.toLocaleString(),
-    width: "20%",
   },
   {
-    name: 'Per Capita',
+    name: 'Confirmed Per Capita',
     field: 'perHundred',
     sortable: true,
     dataType: 'number',
     render: (value) => value.toLocaleString(),
-    width: "20%",
+  },
+  {
+    name: 'Deaths',
+    field: 'deaths',
+    sortable: true,
+    dataType: 'number',
+    render: (value) => value.toLocaleString(),
+  },
+  {
+    name: 'Deaths Per Capita',
+    field: 'perHundredDeaths',
+    sortable: true,
+    dataType: 'number',
+    render: (value) => value.toLocaleString(),
   },
   {
     name: 'Distribution (%)',
@@ -31,7 +44,6 @@ const columns = [
     sortable: true,
     dataType: 'number',
     render: (value) => value.toLocaleString(),
-    width: "20%",
   },
 ]
 
@@ -62,7 +74,6 @@ const Table = ({ data, onMouseEnter, onMouseLeave}) => {
         }}
         sorting={true}
         rowProps={getRowProps}
-        responsive={false}
         loading={data.length === 0}
       />
     </>

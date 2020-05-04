@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Map, TileLayer, GeoJSON } from 'react-leaflet'
 import Control from 'react-leaflet-control';
-import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel, EuiRadioGroup } from '@elastic/eui';
+import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel, EuiSelect } from '@elastic/eui';
 import { useMediaQuery } from 'react-responsive'
 import montrealGeoJson from '../../geojson/montreal.json';
 import getKey from '../../helpers/key';
@@ -44,15 +44,11 @@ const getBottomPanel = () => {
   return gradesMap;
 }
 
-const radios = [
-  {
-    id: 'confirmed',
-    label: 'Confirmed',
-  },
-  {
-    id: 'perHundred',
-    label: 'Per Capita',
-  },
+const options = [
+  { value: 'confirmed', text: 'Confirmed' },
+  { value: 'deaths', text: 'Deaths' },
+  { value: 'perHundred', text: 'Confirmed Per Capita' },
+  { value: 'perHundredDeaths', text: 'Deaths Per Capita' },
 ];
 
 const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
@@ -83,17 +79,20 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
     const location = layer.feature.properties.district;
     const key =  getKey(location);
     const confirmed = data[key].confirmed;
+    const deaths = data[key].deaths;
     const perHundred = data[key].perHundred;
+    const perHundredDeaths = data[key].perHundredDeaths;
     const distribution = data[key].distribution;
+
     if (e.containerPoint) {
-      setHovered({location, confirmed, perHundred, distribution });
+      setHovered({location, confirmed, deaths, perHundred, perHundredDeaths, distribution });
     }
 
     layer.setStyle({
-        weight: 5,
-        color: '#666',
-        dashArray: '',
-        fillOpacity: 0.7
+      weight: 5,
+      color: '#666',
+      dashArray: '0',
+      fillOpacity: 0.7
     });
   
     layer.bringToFront();
@@ -101,7 +100,14 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
   
   const resetHighlight = (e) => {
     setHovered(null);
-    geoJson.current.leafletElement.resetStyle(e.target);
+    const layer = e.target;
+    layer.setStyle({
+      weight: 2,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7
+    });
+    layer.bringToBack();
   }
   
   const zoomToFeature = (e) => {
@@ -167,7 +173,9 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
                         <>
                           <p><b>{hovered.location}</b></p>
                           {stat('Confirmed', hovered.confirmed)}
-                          {stat('Per Capita', hovered.perHundred)}
+                          {stat('Deaths', hovered.deaths)}
+                          {stat('Confirmed Per Capita', hovered.perHundred)}
+                          {stat('Deaths Per Capita', hovered.perHundredDeaths)}
                           {stat('Distribution (%)', hovered.distribution)}
                         </>
                       ) : (
@@ -183,19 +191,14 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
               </EuiPanel>
             </Control>
             <Control position="bottomleft" >
-              <EuiPanel>
-                <EuiRadioGroup
-                  options={radios}
-                  idSelected={choroplethGradeType}
-                  onChange={(option) => setChoroplethGradeType(option)}
-                  name="Show"
-                  legend={{
-                    children: <span>Show</span>,
-                  }}
-                />
-              </EuiPanel>
+              <EuiSelect
+                id="Show"
+                options={options}
+                value={choroplethGradeType}
+                onChange={e => setChoroplethGradeType(e.target.value)}
+              />
             </Control>
-          </Map>        
+          </Map>
         ) : (
           <EuiFlexGroup className="chart" alignItems="center" justifyContent="center">
             <EuiFlexItem grow={false}>
