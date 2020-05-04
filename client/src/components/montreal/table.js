@@ -72,6 +72,7 @@ const Table = ({ data, onMouseEnter, onMouseLeave}) => {
           pageSizeOptions: [10],
           initialPageSize: 10,
         }}
+        responsive={false}
         sorting={true}
         rowProps={getRowProps}
         loading={data.length === 0}
