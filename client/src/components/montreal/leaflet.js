@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Map, TileLayer, GeoJSON } from 'react-leaflet'
 import Control from 'react-leaflet-control';
-import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel, EuiSelect } from '@elastic/eui';
+import { EuiText, EuiFlexGroup, EuiFlexItem, EuiTextColor, EuiLoadingChart, EuiPanel, EuiSuperSelect } from '@elastic/eui';
 import { useMediaQuery } from 'react-responsive'
 import montrealGeoJson from '../../geojson/montreal.json';
 import getKey from '../../helpers/key';
@@ -45,10 +45,10 @@ const getBottomPanel = () => {
 }
 
 const options = [
-  { value: 'confirmed', text: 'Confirmed' },
-  { value: 'deaths', text: 'Deaths' },
-  { value: 'perHundred', text: 'Confirmed Per Capita' },
-  { value: 'perHundredDeaths', text: 'Deaths Per Capita' },
+  { value: 'confirmed', inputDisplay: 'Confirmed' },
+  { value: 'deaths', inputDisplay: 'Deaths' },
+  { value: 'perHundred', inputDisplay: 'Confirmed Per Capita' },
+  { value: 'perHundredDeaths', inputDisplay: 'Deaths Per Capita' },
 ];
 
 const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
@@ -190,13 +190,17 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
                 {getBottomPanel()}
               </EuiPanel>
             </Control>
-            <Control position="bottomleft" >
-              <EuiSelect
-                id="Show"
-                options={options}
-                value={choroplethGradeType}
-                onChange={e => setChoroplethGradeType(e.target.value)}
-              />
+            <Control position="bottomleft">
+              {EuiSuperSelect && (
+                <EuiSuperSelect
+                  id="Show"
+                  options={options}
+                  value={choroplethGradeType}
+                  onChange={option => setChoroplethGradeType(option)}
+                  compressed
+                  style={{ minWidth: 200 }}
+                />
+              )}
             </Control>
           </Map>
         ) : (
