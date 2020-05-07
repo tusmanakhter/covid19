@@ -42,9 +42,9 @@ const getLatestDict = async (url: string) => {
     const province = record[Properties.Province] ?? "";
     const lat = record[Properties.Lat] ?? 0;
     const long = record[Properties.Long] ?? 0;
-    const confirmed = record[Properties.Confirmed];
-    const recovered = record[Properties.Recovered];
-    const deaths = record[Properties.Deaths];
+    const confirmed = record[Properties.Confirmed] ?? 0;
+    const recovered = record[Properties.Recovered] ?? 0;
+    const deaths = record[Properties.Deaths] ?? 0;
     const active = confirmed - (recovered + deaths);
     const lastUpdate = record[Properties.LastUpdate];
     const perCapita = record[Properties.PerCapita] ?? 0;
