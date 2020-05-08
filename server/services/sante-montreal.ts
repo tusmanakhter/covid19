@@ -84,7 +84,11 @@ const getMontrealAgeData = async () => {
 }
 
 const sanitizePerHundred = (perHundred: string) => {
-  return parseFloat(perHundred.replace(/n\.p\.|\*|-/g, '0').replace(/,|\s/g, ''));
+  let sanitizedNum = parseFloat(perHundred.replace(/n\.p\.|\*|-|\s|/g, '0').replace(/,/g, ''));
+  if (isNaN(sanitizedNum)) {
+    sanitizedNum = 0;
+  }
+  return sanitizedNum;
 }
 
 const sanitizeStat = (stat: string) => {
