@@ -150,7 +150,6 @@ const getCasesByAgeRowData = (entries: any) => {
   const data: any = [];
 
   entries.forEach((entry: any) => {
-    console.log(entry);
     const ageGroup = entry['Groupe d\'âge'].replace(/ans/, 'years').replace(/et plus/, 'and above');
     const cases = normalizeInteger(entry['Proportion de cas confirmés']);
 

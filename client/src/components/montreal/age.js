@@ -23,7 +23,7 @@ const Chart = ({ data }) => {
             <EuiFlexItem grow={false}>
               <EuiFlexGroup alignItems="center">
                 <EuiFlexItem>
-                  <EuiTitle size="s"><h2>Cases By Age</h2></EuiTitle>
+                  <EuiTitle size="s"><h2>By Age</h2></EuiTitle>
                 </EuiFlexItem>
               </EuiFlexGroup>
             </EuiFlexItem>
@@ -37,7 +37,7 @@ const Chart = ({ data }) => {
                   showLegendDisplayValue={false}
                 />
                 <BarSeries
-                  id={"ageGroup"}
+                  id={"confirmed"}
                   name={"Confirmed"}
                   xScaleType={ScaleType.Date}
                   yScaleType={ScaleType.Linear}
@@ -53,6 +53,24 @@ const Chart = ({ data }) => {
                   data={data}
                   xAccessor={"ageGroup"}
                   yAccessors={["perHundred"]}
+                />
+                <BarSeries
+                  id={"deaths"}
+                  name={"Deaths"}
+                  xScaleType={ScaleType.Date}
+                  yScaleType={ScaleType.Linear}
+                  data={data}
+                  xAccessor={"ageGroup"}
+                  yAccessors={["deaths"]}
+                />
+                <BarSeries
+                  id={"perHundredDeaths"}
+                  name={"Deaths Per Capita"}
+                  xScaleType={ScaleType.Date}
+                  yScaleType={ScaleType.Linear}
+                  data={data}
+                  xAccessor={"ageGroup"}
+                  yAccessors={["perHundredDeaths"]}
                 />
                 <Axis
                   id="bottom-axis"

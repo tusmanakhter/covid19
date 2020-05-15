@@ -57,7 +57,10 @@ const getMontrealAgeData = async () => {
   const table = header.closest('table');
   const trs = table.find('tbody tr');
   const ageData = trs.map((index, element) => {
-    const ageGroup = html(element).find('td:nth-of-type(1)').text().trim();
+    let ageGroup = html(element).find('td:nth-of-type(1)').text().trim();
+    if (ageGroup.includes('Manquant')) {
+      ageGroup = 'Missing';
+    }
     const confirmedString = html(element).find('td:nth-of-type(2)').text().trim();
     const confirmed = sanitizeInt(confirmedString);
     const distributionString = html(element).find('td:nth-of-type(3)').text();
