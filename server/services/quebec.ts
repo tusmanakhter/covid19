@@ -39,8 +39,8 @@ const getOtherData = async () => {
 
     const summary = parseCsvData(getSummaryRowData, response, 2, 3);
     const casesPerRegion = parseCsvData(getCasesPerRegionRowData, response, 12, 30);
-    const casesByAge = parseCsvData(getCasesByAgeRowData, response, 34, 40);
-    const deathsByAge = parseCsvData(getDeathsByAgeRowData, response, 50, 56);
+    const casesByAge = parseCsvData(getCasesByAgeRowData, response, 32, 42);
+    const deathsByAge = parseCsvData(getDeathsByAgeRowData, response, 48, 58);
     
     data = {
       summary,
@@ -150,6 +150,7 @@ const getCasesByAgeRowData = (entries: any) => {
   const data: any = [];
 
   entries.forEach((entry: any) => {
+    console.log(entry);
     const ageGroup = entry['Groupe d\'âge'].replace(/ans/, 'years').replace(/et plus/, 'and above');
     const cases = normalizeInteger(entry['Proportion de cas confirmés']);
 
