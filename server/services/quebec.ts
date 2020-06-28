@@ -204,6 +204,10 @@ const getQuebecData = async () => {
 }
 
 const normalizeInteger = (integer: string) => {
+  if (integer == undefined) {
+    return 0;
+  }
+  
   const parsed = parseInt(integer.replace(/\s/g,''), 10);
   if (isNaN(parsed)) {
     return 0;

@@ -6,7 +6,7 @@ import 'dayjs/locale/fr-ca'
 import customParseFormat from "dayjs/plugin/customParseFormat"
 dayjs.extend(customParseFormat)
 
-const baseUrl = 'https://santemontreal.qc.ca/population/coronavirus-covid-19';
+const baseUrl = 'https://santemontreal.qc.ca/population/coronavirus-covid-19/situation-du-coronavirus-covid-19-a-montreal';
 
 const getMontrealData = async () => {
   const response: any = await got(baseUrl).text();
