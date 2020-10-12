@@ -1,6 +1,5 @@
 import { getCanadaStats, getQuebecStats } from "../helpers/stats";
 import  { getMontrealData, getMontrealAgeData } from "../services/sante-montreal";
-import  { getDateData } from "../services/quebec";
 import cache from "../helpers/cache";
 
 const getData = async () => {

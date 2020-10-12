@@ -38,13 +38,6 @@ const columns = [
     dataType: 'number',
     render: (value) => value.toLocaleString(),
   },
-  {
-    name: 'Distribution (%)',
-    field: 'distribution',
-    sortable: true,
-    dataType: 'number',
-    render: (value) => value.toLocaleString(),
-  },
 ]
 
 const Table = ({ data, onMouseEnter, onMouseLeave}) => {

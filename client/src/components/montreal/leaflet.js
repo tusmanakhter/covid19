@@ -82,10 +82,9 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
     const deaths = data[key].deaths;
     const perHundred = data[key].perHundred;
     const perHundredDeaths = data[key].perHundredDeaths;
-    const distribution = data[key].distribution;
 
     if (e.containerPoint) {
-      setHovered({location, confirmed, deaths, perHundred, perHundredDeaths, distribution });
+      setHovered({location, confirmed, deaths, perHundred, perHundredDeaths});
     }
 
     layer.setStyle({
@@ -176,7 +175,6 @@ const Leaflet = ({ data, mouseEnter, mouseLeave }) => {
                           {stat('Deaths', hovered.deaths)}
                           {stat('Confirmed Per Capita', hovered.perHundred)}
                           {stat('Deaths Per Capita', hovered.perHundredDeaths)}
-                          {stat('Distribution (%)', hovered.distribution)}
                         </>
                       ) : (
                         <p>Hover over a borrough/linked city</p>
