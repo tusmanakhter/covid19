@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { EuiPage, EuiHeader, EuiHeaderSection, EuiHeaderSectionItem, EuiHeaderLinks, EuiHeaderLogo, EuiFlexGroup, EuiFlexItem, EuiText, EuiSpacer, EuiPopover } from '@elastic/eui';
+import { EuiPage, EuiHeader, EuiHeaderSection, EuiHeaderSectionItem, EuiHeaderLinks, EuiHeaderLogo, EuiFlexGroup, EuiFlexItem, EuiText, EuiSpacer, EuiPopover, EuiCallOut } from '@elastic/eui';
 import { Link } from 'gatsby';
 import { OutboundLink } from 'gatsby-plugin-gtag'
 import logoSvg from '../images/corona.svg';
@@ -47,6 +47,11 @@ const Layout = ({ children, global }) => {
           }
         </EuiHeaderSection>
       </EuiHeader>
+      <EuiCallOut
+        title="This project is no longer under development. Please use official sources for Covid-19 data."
+        iconType="alert"
+        color="danger"
+      />
       {
         global ? (
           <>

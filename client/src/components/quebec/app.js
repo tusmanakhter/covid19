@@ -9,9 +9,9 @@ import Testing from './testing-chart';
 import Summary from './summary-chart';
 import Leaflet from './leaflet';
 import Age from './Age';
-import ky from 'ky';
 import { EuiPanel, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
 import getKey from '../../helpers/key';
+import archivedData from "../../../../data/quebec.json";
 
 const App = () => {
   const [mapData, setMapData] = useState();
@@ -22,7 +22,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get(`${process.env.API_URL}/api/quebec`).json();
+      const data = archivedData;
       const dict = data.casesPerRegion.reduce((map, obj) => {
         const key = getKey(obj.region);
         map[key] = { ...obj };

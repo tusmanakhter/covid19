@@ -4,9 +4,9 @@ import Table from './table';
 import Stats from './stats';
 import Leaflet from './leaflet';
 import Age from './Age';
-import ky from 'ky';
 import { EuiPanel, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
 import getKey from '../../helpers/key';
+import archivedData from "../../../../data/montreal.json";
 
 const App = () => {
   const [mapData, setMapData] = useState();
@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get(`${process.env.API_URL}/api/montreal`).json();
+      const data = archivedData;
       const dict = data.locations.reduce((map, obj) => {
         const key = getKey(obj.location);
         map[key] = { ...obj };

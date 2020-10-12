@@ -5,9 +5,9 @@ import Stats from './stats';
 import Leaflet from './leaflet';
 import Chart from './chart';
 import DatePicker from './date-picker';
-import ky from 'ky';
 import { EuiPanel, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
 import { addLatestStats, getCountryData, getProvinceData } from '../../helpers/stats';
+import archivedData from "../../../../data/global.json";
 import './app.css';
 
 const addAllLatestStats = (data, dateIndex) => {
@@ -53,7 +53,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await ky.get(`${process.env.API_URL}/api`).json();
+      const data = archivedData;
       const dateIndex = data.global.history.length - 1;
       setCurrentData(data, dateIndex);
       setSelected('Global');
