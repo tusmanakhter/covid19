@@ -1,4 +1,5 @@
 import React from 'react';
+import { withPrefix } from "gatsby"
 import PropTypes from 'prop-types'
 import { EuiPanel, EuiText, EuiBadge, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
 
@@ -11,7 +12,7 @@ const LocationCard = ({ locationKey, location, stat, onRowClick, isPercentage, p
           </EuiText>
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <img src={`/flags/${countryCode.toLowerCase()}.svg`} alt={countryCode} height="18" width="24" />
+          <img src={withPrefix(`/flags/${countryCode.toLowerCase()}.svg`)} alt={countryCode} height="18" width="24" />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
           <EuiText size="s">

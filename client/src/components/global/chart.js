@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { withPrefix } from "gatsby"
 import PropTypes from 'prop-types'
 import {
   Chart as ElasticChart,
@@ -83,7 +84,7 @@ const Chart = ({ title, data, dateIndex }) => {
                     {
                       data.location.country !== 'Global' && 
                       <EuiFlexItem grow={false}>
-                        <img src={`/flags/${data.location.iso2.toLowerCase()}.svg`} alt={data.location.iso2} height="18" width="24" />
+                        <img src={withPrefix(`/flags/${data.location.iso2.toLowerCase()}.svg`)} alt={data.location.iso2} height="18" width="24" />
                       </EuiFlexItem>
                     }
                     <EuiFlexItem grow={false}>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { withPrefix } from "gatsby"
 import PropTypes from 'prop-types'
 import BackButton from './back-button';
 import { EuiStat, EuiFlexItem, EuiFlexGroup, EuiText, EuiSpacer, EuiBadge, EuiLoadingContent } from '@elastic/eui';
@@ -36,7 +37,7 @@ const Stats = ({ data, onBack }) => {
               {
                 data.location.country !== 'Global' && 
                 <EuiFlexItem grow={false}>
-                  <img src={`/flags/${data.location.iso2.toLowerCase()}.svg`} alt={data.location.iso2} height="18" width="24" />
+                  <img src={withPrefix(`/flags/${data.location.iso2.toLowerCase()}.svg`)} alt={data.location.iso2} height="18" width="24" />
                 </EuiFlexItem>
               }
               <EuiFlexItem grow={false}>

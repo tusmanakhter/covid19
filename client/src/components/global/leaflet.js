@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import { withPrefix } from "gatsby"
 import PropTypes from 'prop-types'
 import { Map, CircleMarker, Popup, TileLayer } from 'react-leaflet'
 import { EuiText, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiLoadingChart } from '@elastic/eui';
@@ -102,7 +103,7 @@ const Leaflet = ({ data, selectedData, markerType }) => {
               }
               </EuiFlexItem>
               <EuiFlexItem grow={false}>
-                <img src={`/flags/${location.location.iso2.toLowerCase()}.svg`} alt={location.location.iso2} height="18" width="24" />
+                <img src={withPrefix(`/flags/${location.location.iso2.toLowerCase()}.svg`)} alt={location.location.iso2} height="18" width="24" />
               </EuiFlexItem>
             </EuiFlexGroup>
             <EuiHorizontalRule margin="xs" />
